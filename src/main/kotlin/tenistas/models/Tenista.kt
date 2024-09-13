@@ -11,6 +11,8 @@ data class Tenista(
     val puntos: Int,
     val mano: Mano,
     val fecha: LocalDate,
+    val createdAt: LocalDate = LocalDate.now(),
+    val updatedAt: LocalDate = LocalDate.now()
 ) {
     enum class Mano {
         DIESTRO, ZURODO
