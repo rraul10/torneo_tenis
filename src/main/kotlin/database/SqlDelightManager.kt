@@ -1,6 +1,8 @@
 package database
 
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import config.Config
+import dev.javierhvicente.database.AppDatabase
 import org.lighthousegames.logging.logging
 
 private val logger = logging()
@@ -9,7 +11,7 @@ private val logger = logging()
 class SqlDelightManager(
     private val config: Config
 ) {
-    val databaseQueries: DataQueries by lazy { initQueries() }
+    val databaseQueries: DatabaseQueries by lazy { initQueries() }
 
     init {
         logger.debug { "Inicializando la base de datos con SqlDelight" }
@@ -19,7 +21,7 @@ class SqlDelightManager(
         initialize()
     }
 
-    fun initQueries(): DataQueries {
+    fun initQueries(): DatabaseQueries {
         val driver = if (Config.databaseInMemory) {
             logger.debug { "SqlDeLightClient - InMemory" }
             JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
@@ -31,15 +33,14 @@ class SqlDelightManager(
         AppDatabase.Schema.create(driver)
         val database = AppDatabase(driver)
 
-        return database.dataQueries
+        return database.databaseQueries
     }
 
 
     fun clearData() {
         logger.debug { "Borrando datos de la base de datos" }
         databaseQueries.transaction {
-            databaseQueries.deleteAllTenista()
-            databaseQueries.deleteAllEntrenador()
+            databaseQueries.deleteAllTenistas()
         }
     }
 
