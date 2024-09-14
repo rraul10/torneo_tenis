@@ -1,6 +1,7 @@
 package tenistas.models
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Tenista(
     val id: Long = -1,
@@ -9,12 +10,9 @@ data class Tenista(
     val altura: Int,
     val peso: Int,
     val puntos: Int,
-    val mano: Mano,
+    val mano: String,
     val fecha: LocalDate,
-    val createdAt: LocalDate = LocalDate.now(),
-    val updatedAt: LocalDate = LocalDate.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val updatedAt: LocalDateTime = LocalDateTime.now()
 ) {
-    enum class Mano {
-        DIESTRO, ZURODO
-    }
 }
