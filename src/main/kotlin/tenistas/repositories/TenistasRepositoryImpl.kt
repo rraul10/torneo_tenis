@@ -35,7 +35,7 @@ class TenistasRepositoryImpl(
                 peso = tenista.peso.toLong(),
                 puntos = tenista.puntos.toLong(),
                 mano = tenista.mano,
-                fecha_nacimiento = tenista.fecha.toString(),
+                fecha_nacimiento = tenista.fecha_nacimiento.toString(),
                 created_at = tenista.createdAt.toString(),
                 upadated_at = tenista.updatedAt.toString(),
             )

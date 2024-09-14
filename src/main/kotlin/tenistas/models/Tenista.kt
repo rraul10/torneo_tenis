@@ -11,7 +11,7 @@ data class Tenista(
     val peso: Int,
     val puntos: Int,
     val mano: String,
-    val fecha: LocalDate,
+    val fecha_nacimiento: LocalDate,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now()
 ) {

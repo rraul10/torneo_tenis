@@ -18,7 +18,7 @@ fun Tenistas_Entity.toTenista(): Tenista {
         peso = this.peso.toInt(),
         puntos = this.puntos.toInt(),
         mano = this.mano,
-        fecha = this.fecha_nacimiento.returnDateString(),
+        fecha_nacimiento = this.fecha_nacimiento.returnDateString(),
         createdAt = this.created_at.retunrDateTimeString(),
         updatedAt = this.upadated_at.retunrDateTimeString()
     )
@@ -34,7 +34,7 @@ fun Tenista.toTenistas_Entity(): Tenistas_Entity {
         peso = this.peso.toLong(),
         puntos = this.puntos.toLong(),
         mano = this.mano,
-        fecha_nacimiento = this.fecha.toString(),
+        fecha_nacimiento = this.fecha_nacimiento.toString(),
         created_at = this.createdAt.toString(),
         upadated_at = this.updatedAt.toString()
     )
@@ -50,7 +50,7 @@ fun TenistaDto.toTenista(): Tenista {
         peso = this.peso.toInt(),
         puntos = this.puntos.toInt(),
         mano = this.mano,
-        fecha = this.fecha_nacimiento.returnDateString(),
+        fecha_nacimiento = this.fecha_nacimiento.returnDateString(),
         createdAt = this.created_at.retunrDateTimeString(),
         updatedAt = this.updated_at.retunrDateTimeString()
     )
@@ -66,7 +66,7 @@ fun Tenista.toTenistaDto(): TenistaDto {
         peso = this.peso.toString(),
         puntos = this.puntos.toString(),
         mano = this.mano,
-        fecha_nacimiento = this.fecha.toString(),
+        fecha_nacimiento = this.fecha_nacimiento.toString(),
         created_at = this.createdAt.toString(),
         updated_at = this.updatedAt.toString()
     )
