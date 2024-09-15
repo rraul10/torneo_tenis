@@ -12,7 +12,7 @@ import java.io.File
 
 private val logger = logging()
 class TensitasStorageCsv: TenistasStorage {
-    override fun load(file: File): Result<List<Tenista>, FileError> {
+     fun load(file: File): Result<List<Tenista>, FileError> {
         logger.debug { "Loading tenistas from file: $file" }
         return try {
             val lines = file.reader().readLines()
