@@ -24,6 +24,9 @@ dependencies {
     // Serialización JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
+    implementation("io.github.pdvrieze.xmlutil:core-jvm:0.86.3")
+    implementation("io.github.pdvrieze.xmlutil:serialization-jvm:0.86.3")
+
     testImplementation("io.mockk:mockk:1.13.10")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
