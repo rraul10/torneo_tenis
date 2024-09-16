@@ -46,13 +46,13 @@ fun main(args: Array<String>) {
             Err(CsvErrors.InvalidCsvFormat("Error: No se ha podido leer el archivo CSV"))
         }
     )
-    tenistasService.readCSV(File(args[0]))
 
     val listaTenistas = tenistasService.getAllTenistas().value
 
     terminal.println(rgb("#08ff00")("Consultas de los tenistas: 🎾\n"))
     terminal.println(TextColors.blue("Tenistas ordenados por ranking\n"))
-    listaTenistas.sortedByDescending { it.puntos }.forEach {println(it)}
+    val ranking = listaTenistas.sortedByDescending { it.puntos }
+    ranking.forEach { println("${it.nombre} - ${it.puntos} pts") }
 
     terminal.println(TextColors.blue("Media de altura de los tenistas\n"))
     println("${listaTenistas.map { it.altura}.average() } cm")
@@ -106,18 +106,20 @@ fun main(args: Array<String>) {
     if(args.size > 1) {
         when{
             args[1].contains(".json") -> {
-                tenistasService.writeJson(File(args[1]), listaTenistas)
+                tenistasService.writeJson(File(args[1]), ranking)
             }
             args[1].contains(".xml") -> {
-                tenistasService.writeXml(File(args[1]), listaTenistas)
+                tenistasService.writeXml(File(args[1]), ranking)
             }
             args[1].contains(".csv") -> {
-                tenistasService.writeCSV(File(args[1]), listaTenistas)
+                tenistasService.writeCSV(File(args[1]), ranking)
             }
             else -> {
-                tenistasService.writeJson(File(args[1]), listaTenistas)
+                tenistasService.writeJson(File(args[1]), ranking)
             }
         }
+    }else{
+        tenistasService.writeJson(File("torneo_tenis.json"), ranking)
     }
 
     val ficheroSalida = if(args.size == 2) {
@@ -139,4 +141,5 @@ fun main(args: Array<String>) {
     if (!archivo.exists()) {
         archivo.createNewFile()
     }
+    println("${ranking.size}")
 }

@@ -78,7 +78,7 @@ class TenistasStorageImpl: TenistasStorage {
                 ignoreUnknownKeys = true
                 prettyPrint = true
             }
-            val jsonString = json.encodeToString(tenistas.map { it.toTenistaDto() })
+            val jsonString = json.encodeToString<List<TenistaDto>>(tenistas.map { it.toTenistaDto() })
             file.writeText(jsonString)
             Ok(Unit)
         }catch (e: Exception) {
