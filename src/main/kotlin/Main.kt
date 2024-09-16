@@ -141,5 +141,4 @@ fun main(args: Array<String>) {
     if (!archivo.exists()) {
         archivo.createNewFile()
     }
-    println("${ranking.size}")
 }
