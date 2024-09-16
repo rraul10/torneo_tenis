@@ -8,7 +8,6 @@ import tenistas.errors.TenistaError
 import tenistas.models.Tenista
 import tenistas.repositories.TenistasRepository
 import tenistas.storage.TenistasStorage
-import tenistas.storage.TensitasStorageImpl
 import java.io.File
 private val logger = logging()
 class TenistasServiceImpl(
