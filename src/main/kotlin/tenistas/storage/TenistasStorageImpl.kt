@@ -16,7 +16,20 @@ import java.io.File
 import java.time.LocalDateTime
 
 private val logger = logging()
+
+/**
+ * Almacenamiento de tenistas en diferentes formatos de archivos.
+ * @author Javier Hernández
+ * @since 1.0
+ */
 class TenistasStorageImpl: TenistasStorage {
+    /**
+     * Lee un archivo CSV y devuelve una lista de tenistas.
+     * @param file Archivo CSV.
+     * @return Lista de tenistas
+     * @since 1.0
+     * @author Javier Hernández
+     */
      override fun readCsv(file: File): Result<List<Tenista>, FileError> {
         logger.debug { "Loading tenistas from file: $file" }
         return try {
@@ -57,6 +70,14 @@ class TenistasStorageImpl: TenistasStorage {
         }
     }
 
+    /**
+     * Crea un archivo CSV a partir de una lista de tenistas.
+     * @param file Archivo csv.
+     * @param tenistas Lista de tenistas
+     * @return Lista de tenistas en formato Csv
+     * @since 1.0
+     * @autor Javier Hernández
+     */
     override fun storeCsv(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
         logger.debug { "Storing Tenistas into $file" }
         return try {
@@ -71,6 +92,14 @@ class TenistasStorageImpl: TenistasStorage {
         }
     }
 
+    /**
+     * Crea un archivo JSON a partir de una lista de tenistas.
+     * @param file Archivo JSON.
+     * @param tenistas Lista de tenistas
+     * @return Resultado de la operación
+     * @since 1.0
+     * @autor Javier Hernández
+     */
     override fun storeJson(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
         logger.debug { "Storing tenistas into $file" }
         return try {
@@ -86,6 +115,15 @@ class TenistasStorageImpl: TenistasStorage {
             Err(FileError.FileWritingError("Error storing tenistas into $file"))
         }
     }
+
+    /**
+     * Crea un archivo XML a partir de una lista de tenistas.
+     * @param file Archivo XML.
+     * @param tenistas Lista de tenistas
+     * @return Resultado de la operación
+     * @since 1.0
+     * @autor Javier Hernández
+     */
 
     override fun storeXml(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
         logger.debug { "Storing tenistas into $file" }

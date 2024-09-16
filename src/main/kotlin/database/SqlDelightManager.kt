@@ -7,7 +7,12 @@ import org.lighthousegames.logging.logging
 
 private val logger = logging()
 
-
+/**
+ * Clase que administra la base de datos utilizando SqlDelight
+ * @param config Configuración de la aplicación
+ * @author Javier Hernández
+ * @since 1.0
+ */
 class SqlDelightManager(
     private val config: Config
 ) {
@@ -21,6 +26,12 @@ class SqlDelightManager(
         initialize()
     }
 
+    /**
+     * Inicializa las queries de la base de datos
+     * @return Queries de la base de datos
+     * @author Javier Hernández
+     * @since 1.0
+     */
     fun initQueries(): DatabaseQueries {
         val driver = if (Config.databaseInMemory) {
             logger.debug { "SqlDeLightClient - InMemory" }
@@ -35,7 +46,11 @@ class SqlDelightManager(
 
         return database.databaseQueries
     }
-
+    /**
+     * Limpia los datos de la base de datos
+     * @author Javier Hernández
+     * @since 1.0
+     */
 
     fun clearData() {
         logger.debug { "Borrando datos de la base de datos" }
@@ -43,11 +58,17 @@ class SqlDelightManager(
             databaseQueries.deleteAllTenistas()
         }
     }
+    /**
+     * Inicializa la base de datos
+     * @author Javier Hernández
+     * @since 1.0
+     */
 
     private fun initialize() {
         logger.debug { "SqlDeLightClient.initialize()" }
         if (Config.dataBaseInit) {
             databaseQueries.transaction {
+                clearData()
             }
         }
     }
