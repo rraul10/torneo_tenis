@@ -19,6 +19,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.14")
     // SQLDelight para SQLite
     implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
+    implementation("org.xerial:sqlite-jdbc:3.45.2.0")
     // Result ROP
     implementation("com.michael-bull.kotlin-result:kotlin-result:2.0.0")
     // Serialización JSON
