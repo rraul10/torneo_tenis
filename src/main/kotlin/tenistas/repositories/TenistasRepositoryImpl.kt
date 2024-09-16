@@ -2,6 +2,7 @@ package tenistas.repositories
 
 import database.SqlDelightManager
 import org.lighthousegames.logging.logging
+import tenistas.mapper.logger
 import tenistas.mapper.toTenista
 import tenistas.models.Tenista
 
@@ -41,6 +42,25 @@ class TenistasRepositoryImpl(
             )
         }
         return tenista
+    }
+
+    override fun updateTenista(tenista: Tenista): Tenista? {
+        looger.debug { "Actualizando el Tenista con id: ${tenista.id}" }
+        var result = this.getTenistaById(tenista.id)?: return null
+        db.updateTenista(
+            id = tenista.id,
+            nombre = tenista.nombre,
+            pais = tenista.pais,
+            altura = tenista.altura.toLong(),
+            peso = tenista.peso.toLong(),
+            puntos = tenista.puntos.toLong(),
+            mano = tenista.mano,
+            fecha_nacimiento = tenista.fecha_nacimiento.toString(),
+            upadated_at = tenista.updatedAt.toString(),
+        )
+        logger.debug { "Tenista actualizado correctamente: ${tenista.nombre}" }
+        result = this.getTenistaById(tenista.id)!!
+        return result
     }
 
     override fun deleteById(id: Long): Tenista? {

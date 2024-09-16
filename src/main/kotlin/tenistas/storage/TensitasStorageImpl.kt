@@ -3,16 +3,20 @@ package tenistas.storage
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import nl.adaptivity.xmlutil.serialization.XML
 import org.lighthousegames.logging.logging
 import tenistas.dto.TenistaDto
 import tenistas.errors.FileError
 import tenistas.mapper.toTenista
+import tenistas.mapper.toTenistaDto
 import tenistas.models.Tenista
 import java.io.File
 
 private val logger = logging()
-class TensitasStorageCsv: TenistasStorage {
-     fun load(file: File): Result<List<Tenista>, FileError> {
+class TensitasStorageImpl: TenistasStorage {
+     override fun readCsv(file: File): Result<List<Tenista>, FileError> {
         logger.debug { "Loading tenistas from file: $file" }
         return try {
             val lines = file.reader().readLines()
@@ -51,7 +55,8 @@ class TensitasStorageCsv: TenistasStorage {
             Err(FileError.FileReadingError("Error loading tenistas from file: $file"))
         }
     }
-    override fun store(file: File, tenistas: List<Tenista>): Result<Unit, FileError>{
+
+    override fun storeCsv(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
         logger.debug { "Storing Tenistas into $file" }
         return try {
             file.appendText("id,nombre,pais,altura,peso,puntos,mano,fecha_nacimiento\n")
@@ -63,7 +68,37 @@ class TensitasStorageCsv: TenistasStorage {
             logger.error(e) { "Error storing tenistas into file: $file" }
             Err(FileError.FileWritingError("Error storing tenistas into file: $file"))
         }
+    }
 
+    override fun storeJson(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
+        logger.debug { "Storing tenistas into $file" }
+        return try {
+            val json = Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+            }
+            val jsonString = json.encodeToString(tenistas.map { it.toTenistaDto() })
+            file.writeText(jsonString)
+            Ok(Unit)
+        }catch (e: Exception) {
+            logger.error(e) { "Error storing tenistas into $file" }
+            Err(FileError.FileWritingError("Error storing tenistas into $file"))
+        }
+    }
+
+    override fun storeXml(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
+        logger.debug { "Storing tenistas into $file" }
+        return try {
+            val xml = XML {
+                indent = 4
+            }
+            val xmlString = xml.encodeToString(tenistas.map { it.toTenistaDto() })
+            file.writeText(xmlString)
+            Ok(Unit)
+        }catch (e: Exception) {
+            logger.error(e) { "Error storing tenistas into $file" }
+            Err(FileError.FileWritingError("Error storing tenistas into $file"))
+        }
     }
 }
 
