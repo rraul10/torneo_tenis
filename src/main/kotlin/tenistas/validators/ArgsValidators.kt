@@ -9,8 +9,8 @@ import java.io.File
 
 private val logger = logging()
 
-fun validateArgs(path: String): Result<String, ArgsErrors> {
-    logger.debug { "Validando los argumentos" }
+fun validateArgsEntrada(path: String): Result<String, ArgsErrors> {
+    logger.debug { "Validando argumentos de entrada" }
     logger.debug { "Comprobando si el archivo existe: $path" }
      if (!File(path).exists() && !File(path).canRead() && !File(path).isFile) {
          logger.error {"Error al leer el archivo $path. No se puede encontrar o leer. Verifique que el archivo exista y que tenga permisos de lectura."}
@@ -22,4 +22,15 @@ fun validateArgs(path: String): Result<String, ArgsErrors> {
         Err(ArgsErrors.InvalidExtension("El archivo $path no tiene extensión .csv"))
     }
     return Ok(path)
+}
+
+fun validateArgsSalida(path: String): Result<String, ArgsErrors> {
+    logger.debug { "Validando argumentos de salida" }
+    if(path.isEmpty()) return Ok("argumento de salida vacio cogiendo valor por defecto")
+    if(!validateArgsSalidaExtension(path)) return Err(ArgsErrors.InvalidExtension("El argumento de salida debe terminar en.json,.xml o.csv"))
+    else return Ok("argumento de salida valido")
+}
+
+private fun validateArgsSalidaExtension(path: String): Boolean {
+    return  path.contains(".json") || path.contains(".xml") || path.contains(".csv")
 }

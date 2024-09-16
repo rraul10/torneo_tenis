@@ -1,11 +1,12 @@
 package tenistas.mapper
 
-import Locale.retunrDateTimeString
-import Locale.returnDateString
+
 import database.Tenistas_Entity
 import org.lighthousegames.logging.logging
 import tenistas.dto.TenistaDto
 import tenistas.models.Tenista
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 val logger = logging()
 fun Tenistas_Entity.toTenista(): Tenista {
@@ -18,9 +19,9 @@ fun Tenistas_Entity.toTenista(): Tenista {
         peso = this.peso.toInt(),
         puntos = this.puntos.toInt(),
         mano = this.mano,
-        fecha_nacimiento = this.fecha_nacimiento.returnDateString(),
-        createdAt = this.created_at.retunrDateTimeString(),
-        updatedAt = this.upadated_at.retunrDateTimeString()
+        fecha_nacimiento = LocalDate.parse(this.fecha_nacimiento),
+        createdAt = LocalDateTime.parse(this.created_at),
+        updatedAt = LocalDateTime.parse(this.upadated_at)
     )
 }
 
@@ -50,9 +51,9 @@ fun TenistaDto.toTenista(): Tenista {
         peso = this.peso.toInt(),
         puntos = this.puntos.toInt(),
         mano = this.mano,
-        fecha_nacimiento = this.fecha_nacimiento.returnDateString(),
-        createdAt = this.created_at.retunrDateTimeString(),
-        updatedAt = this.updated_at.retunrDateTimeString()
+        fecha_nacimiento = LocalDate.parse(this.fecha_nacimiento),
+        createdAt = LocalDateTime.parse(this.created_at),
+        updatedAt = LocalDateTime.parse(this.updated_at)
     )
 }
 

@@ -13,6 +13,7 @@ import tenistas.mapper.toTenista
 import tenistas.mapper.toTenistaDto
 import tenistas.models.Tenista
 import java.io.File
+import java.time.LocalDateTime
 
 private val logger = logging()
 class TenistasStorageImpl: TenistasStorage {
@@ -45,8 +46,8 @@ class TenistasStorageImpl: TenistasStorage {
                         puntos = data[5],
                         mano = data[6],
                         fecha_nacimiento = data[7],
-                        created_at = data[8],
-                        updated_at = data[9]
+                        created_at = LocalDateTime.now().toString(),
+                        updated_at = LocalDateTime.now().toString()
                     ).toTenista()
                 }
             )
@@ -77,7 +78,7 @@ class TenistasStorageImpl: TenistasStorage {
                 ignoreUnknownKeys = true
                 prettyPrint = true
             }
-            val jsonString = json.encodeToString(tenistas.map { it.toTenistaDto() })
+            val jsonString = json.encodeToString<List<TenistaDto>>(tenistas.map { it.toTenistaDto() })
             file.writeText(jsonString)
             Ok(Unit)
         }catch (e: Exception) {

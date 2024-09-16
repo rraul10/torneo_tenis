@@ -12,15 +12,17 @@ import tenistas.errors.CsvErrors
 import tenistas.repositories.TenistasRepositoryImpl
 import tenistas.service.TenistasServiceImpl
 import tenistas.storage.TenistasStorageImpl
-import tenistas.validators.validateArgs
+import tenistas.validators.validateArgsEntrada
 import tenistas.validators.validateCsvFormat
+import java.io.File
+
 private val logger = logging()
 private val terminal = Terminal()
 fun main(args: Array<String>) {
     if(args.isEmpty()) {
         println("No arguments provided.")
     }
-    validateArgs(args[0]).mapBoth(
+    validateArgsEntrada(args[0]).mapBoth(
         success = { println("Archivo válido: $it") },
         failure = {
             Err(ArgsErrors.InvalidArgumentsError("Error: El argumento introducido no es válido"))
@@ -38,12 +40,19 @@ fun main(args: Array<String>) {
         tenistasRepository = TenistasRepositoryImpl(SqlDelightManager(Config)),
         cache = CacheTenistasImpl(Config.cacheSize)
     )
+    tenistasService.readCSV(File(args[0])).mapBoth(
+        success = { println("CSV leído correctamente") },
+        failure = {
+            Err(CsvErrors.InvalidCsvFormat("Error: No se ha podido leer el archivo CSV"))
+        }
+    )
 
     val listaTenistas = tenistasService.getAllTenistas().value
 
     terminal.println(rgb("#08ff00")("Consultas de los tenistas: 🎾\n"))
     terminal.println(TextColors.blue("Tenistas ordenados por ranking\n"))
-    listaTenistas.sortedByDescending { it.puntos }.forEach {println(it)}
+    val ranking = listaTenistas.sortedByDescending { it.puntos }
+    ranking.forEach { println("${it.nombre} - ${it.puntos} pts") }
 
     terminal.println(TextColors.blue("Media de altura de los tenistas\n"))
     println("${listaTenistas.map { it.altura}.average() } cm")
@@ -93,4 +102,44 @@ fun main(args: Array<String>) {
     terminal.println(TextColors.blue("Tenista con mejor ranking de España\n"))
     val tenista = listaTenistas.filter { it.pais == "España" }.maxByOrNull { it.puntos }
     println("${tenista?.nombre} - Puntos ${tenista?.puntos}\n")
+
+    if(args.size > 1) {
+        when{
+            args[1].contains(".json") -> {
+                tenistasService.writeJson(File(args[1]), ranking)
+            }
+            args[1].contains(".xml") -> {
+                tenistasService.writeXml(File(args[1]), ranking)
+            }
+            args[1].contains(".csv") -> {
+                tenistasService.writeCSV(File(args[1]), ranking)
+            }
+            else -> {
+                tenistasService.writeJson(File(args[1]), ranking)
+            }
+        }
+    }else{
+        tenistasService.writeJson(File("torneo_tenis.json"), ranking)
+    }
+
+    val ficheroSalida = if(args.size == 2) {
+        args[1]
+    } else {
+        "torneo_tenis.json"
+    }
+
+    val archivo = if (File(ficheroSalida).isAbsolute) {
+        File(ficheroSalida)
+    } else {
+        File(System.getProperty("user.dir"), ficheroSalida)
+    }
+    archivo.parentFile?.let { parentDir ->
+        if (!parentDir.exists()) {
+            parentDir.mkdirs()
+        }
+    }
+    if (!archivo.exists()) {
+        archivo.createNewFile()
+    }
+    println("${ranking.size}")
 }
