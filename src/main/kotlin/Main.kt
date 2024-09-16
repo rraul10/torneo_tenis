@@ -12,15 +12,17 @@ import tenistas.errors.CsvErrors
 import tenistas.repositories.TenistasRepositoryImpl
 import tenistas.service.TenistasServiceImpl
 import tenistas.storage.TenistasStorageImpl
-import tenistas.validators.validateArgs
+import tenistas.validators.validateArgsEntrada
 import tenistas.validators.validateCsvFormat
+import java.io.File
+
 private val logger = logging()
 private val terminal = Terminal()
 fun main(args: Array<String>) {
     if(args.isEmpty()) {
         println("No arguments provided.")
     }
-    validateArgs(args[0]).mapBoth(
+    validateArgsEntrada(args[0]).mapBoth(
         success = { println("Archivo válido: $it") },
         failure = {
             Err(ArgsErrors.InvalidArgumentsError("Error: El argumento introducido no es válido"))
@@ -38,6 +40,13 @@ fun main(args: Array<String>) {
         tenistasRepository = TenistasRepositoryImpl(SqlDelightManager(Config)),
         cache = CacheTenistasImpl(Config.cacheSize)
     )
+    tenistasService.readCSV(File(args[0])).mapBoth(
+        success = { println("CSV leído correctamente") },
+        failure = {
+            Err(CsvErrors.InvalidCsvFormat("Error: No se ha podido leer el archivo CSV"))
+        }
+    )
+    tenistasService.readCSV(File(args[0]))
 
     val listaTenistas = tenistasService.getAllTenistas().value
 
@@ -93,4 +102,41 @@ fun main(args: Array<String>) {
     terminal.println(TextColors.blue("Tenista con mejor ranking de España\n"))
     val tenista = listaTenistas.filter { it.pais == "España" }.maxByOrNull { it.puntos }
     println("${tenista?.nombre} - Puntos ${tenista?.puntos}\n")
+
+    if(args.size > 1) {
+        when{
+            args[1].contains(".json") -> {
+                tenistasService.writeJson(File(args[1]), listaTenistas)
+            }
+            args[1].contains(".xml") -> {
+                tenistasService.writeXml(File(args[1]), listaTenistas)
+            }
+            args[1].contains(".csv") -> {
+                tenistasService.writeCSV(File(args[1]), listaTenistas)
+            }
+            else -> {
+                tenistasService.writeJson(File(args[1]), listaTenistas)
+            }
+        }
+    }
+
+    val ficheroSalida = if(args.size == 2) {
+        args[1]
+    } else {
+        "torneo_tenis.json"
+    }
+
+    val archivo = if (File(ficheroSalida).isAbsolute) {
+        File(ficheroSalida)
+    } else {
+        File(System.getProperty("user.dir"), ficheroSalida)
+    }
+    archivo.parentFile?.let { parentDir ->
+        if (!parentDir.exists()) {
+            parentDir.mkdirs()
+        }
+    }
+    if (!archivo.exists()) {
+        archivo.createNewFile()
+    }
 }
