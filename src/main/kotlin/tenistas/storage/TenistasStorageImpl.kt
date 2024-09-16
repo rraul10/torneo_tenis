@@ -15,7 +15,7 @@ import tenistas.models.Tenista
 import java.io.File
 
 private val logger = logging()
-class TensitasStorageImpl: TenistasStorage {
+class TenistasStorageImpl: TenistasStorage {
      override fun readCsv(file: File): Result<List<Tenista>, FileError> {
         logger.debug { "Loading tenistas from file: $file" }
         return try {
