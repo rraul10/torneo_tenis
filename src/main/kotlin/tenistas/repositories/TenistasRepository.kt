@@ -9,5 +9,4 @@ interface TenistasRepository {
     fun saveTenista(tenista: Tenista): Tenista
     fun updateTenista(tenista: Tenista): Tenista?
     fun deleteById(id: Long): Tenista?
-
 }

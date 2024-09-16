@@ -6,6 +6,13 @@ import java.util.*
 
 private val logger = logging()
 private const val CONFIG_FILENAME = "config.properties"
+
+/**
+ * Clase que lee las propiedades del fichero de configuración config.properties
+ * @author Javier Hernández
+ * @since 1.0
+ *
+ */
 object Config {
     private val actualDirectory = System.getProperty("user.dir")
 

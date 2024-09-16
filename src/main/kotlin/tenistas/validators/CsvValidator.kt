@@ -8,6 +8,13 @@ import java.io.File
 
 private val logger = org.lighthousegames.logging.logging()
 
+/**
+ * Valida el formato del archivo CSV.
+ * @param csvContent Contenido del archivo CSV.
+ * @return Result<Unit, CsvErrors> con el resultado de la validación.
+ * @since 1.0
+ * @author Javier Hernández
+ */
 fun validateCsvFormat(csvContent: String): Result<Unit, CsvErrors> {
     val archivo = File(csvContent)
     val lineas = archivo.readLines()

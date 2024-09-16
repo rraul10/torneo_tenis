@@ -9,6 +9,13 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 val logger = logging()
+
+/**
+ * Mapea un Tenista_Entity a un Tenista
+ * @return Tenista
+ * @author Javier Hernández
+ * @since 1.0
+ */
 fun Tenistas_Entity.toTenista(): Tenista {
     logger.debug { "Mapeando Tenistas_Entity a Tenista" }
     return Tenista(
@@ -24,6 +31,12 @@ fun Tenistas_Entity.toTenista(): Tenista {
         updatedAt = LocalDateTime.parse(this.upadated_at)
     )
 }
+
+/**
+ * Mapea un Tenista a un Tenista_Entity
+ * @return Tenistas_Entity
+ * @since 1.0
+ */
 
 fun Tenista.toTenistas_Entity(): Tenistas_Entity {
     logger.debug { "Mapeando Tenista a Tenistas_Entity" }
@@ -41,6 +54,11 @@ fun Tenista.toTenistas_Entity(): Tenistas_Entity {
     )
 }
 
+/**
+ * Mapea un TenistaDto a un Tenista
+ * @return Tenista
+ * @since 1.0
+ */
 fun TenistaDto.toTenista(): Tenista {
     logger.debug { "Mapeando TenistaDto a Tenista" }
     return Tenista(
@@ -57,6 +75,11 @@ fun TenistaDto.toTenista(): Tenista {
     )
 }
 
+/**
+ * Mapea un Tenista a un TenistaDto
+ * @return TenistaDto
+ * @since 1.0
+ */
 fun Tenista.toTenistaDto(): TenistaDto {
     logger.debug { "Mapeando Tenista a TenistaDto" }
     return TenistaDto(

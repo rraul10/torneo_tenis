@@ -9,6 +9,13 @@ import java.io.File
 
 private val logger = logging()
 
+/**
+ * Valida los argumentos de entrada.
+ * @param path Ruta del archivo de entrada.
+ * @return Result<String, ArgsErrors> con el resultado de la validación.
+ * @since 1.0
+ * @author Javier Hernández
+ */
 fun validateArgsEntrada(path: String): Result<String, ArgsErrors> {
     logger.debug { "Validando argumentos de entrada" }
     logger.debug { "Comprobando si el archivo existe: $path" }
@@ -24,12 +31,28 @@ fun validateArgsEntrada(path: String): Result<String, ArgsErrors> {
     return Ok(path)
 }
 
+/**
+ * Valida los argumentos de salida.
+ * @param path Ruta del archivo de salida.
+ * @return Result<String, ArgsErrors> con el resultado de la validación.
+ * @since 1.0
+ * @author Javier Hernández
+ */
+
 fun validateArgsSalida(path: String): Result<String, ArgsErrors> {
     logger.debug { "Validando argumentos de salida" }
     if(path.isEmpty()) return Ok("argumento de salida vacio cogiendo valor por defecto")
     if(!validateArgsSalidaExtension(path)) return Err(ArgsErrors.InvalidExtension("El argumento de salida debe terminar en.json,.xml o.csv"))
     else return Ok("argumento de salida valido")
 }
+
+/**
+ * Valida la extensión del archivo de salida.
+ * @param path Ruta del archivo de salida.
+ * @return Boolean con el resultado de la validación.
+ * @since 1.0
+ * @author Javier Hernández
+ */
 
 private fun validateArgsSalidaExtension(path: String): Boolean {
     return  path.contains(".json") || path.contains(".xml") || path.contains(".csv")
