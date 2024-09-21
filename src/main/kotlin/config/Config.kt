@@ -20,6 +20,11 @@ object Config {
         readProperty("database.url") ?: "jdbc:sqlite:atp.db"
     }
 
+    val databaseInitTables: Boolean by lazy {
+        readProperty("database.init.tables")?.toBoolean() ?: true
+    }
+
+
     val dataBaseInit: Boolean by lazy {
         readProperty("dataBase.init")?.toBoolean() ?: true
     }
