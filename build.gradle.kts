@@ -17,8 +17,8 @@ dependencies {
     // Logger
     implementation("org.lighthousegames:logging:1.3.0")
     implementation("ch.qos.logback:logback-classic:1.4.14")
-    // SQLDelight para SQLite
-    implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
+    // SqlLite BD
+    implementation("org.mybatis:mybatis:3.5.13")
     implementation("org.xerial:sqlite-jdbc:3.45.2.0")
     // Result ROP
     implementation("com.michael-bull.kotlin-result:kotlin-result:2.0.0")
