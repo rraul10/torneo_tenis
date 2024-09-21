@@ -4,7 +4,6 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.mapBoth
 import config.Config
-import database.SqlDelightManager
 import org.lighthousegames.logging.logging
 import tenistas.cache.CacheTenistasImpl
 import tenistas.errors.ArgsErrors
