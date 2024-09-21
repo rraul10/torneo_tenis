@@ -51,21 +51,21 @@ class TenistasStorageImpl: TenistasStorage {
             Ok(dataLines
                 .map {
                     val data = it.split(",")
-                    if(validateCsvEntries(data).isErr) {
-                        return Err(FileError.FileReadingError("Error loading tenistas from file: $file"))
+                    if(validateCsvEntries(data).isOk()) {
+                        TenistaDto(
+                            id = data[0],
+                            nombre = data[1],
+                            pais = data[2],
+                            altura = data[3],
+                            peso = data[4],
+                            puntos = data[5],
+                            mano = data[6],
+                            fecha_nacimiento = data[7],
+                            created_at = LocalDateTime.now().toString(),
+                            updated_at = LocalDateTime.now().toString()
+                        ).toTenista()
                     }
-                    TenistaDto(
-                        id = data[0],
-                        nombre = data[1],
-                        pais = data[2],
-                        altura = data[3],
-                        peso = data[4],
-                        puntos = data[5],
-                        mano = data[6],
-                        fecha_nacimiento = data[7],
-                        created_at = LocalDateTime.now().toString(),
-                        updated_at = LocalDateTime.now().toString()
-                    ).toTenista()
+
                 }
             )
         } catch (e: Exception) {
