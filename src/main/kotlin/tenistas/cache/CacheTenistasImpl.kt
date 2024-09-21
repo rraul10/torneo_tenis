@@ -7,6 +7,7 @@ import config.Config.cacheSize
 import tenistas.errors.CacheError
 import tenistas.mapper.logger
 import tenistas.models.Tenista
+import java.util.UUID
 
 /**
  * Cache de almacenamiento de tenistas
@@ -16,58 +17,39 @@ import tenistas.models.Tenista
  */
 class CacheTenistasImpl(
     private val size: Int
-): CacheTenistas<Long, Tenista> {
-    private val cache = mutableMapOf<Long, Tenista>()
+): Cache<UUID, Tenista> {
+    private val cache = mutableMapOf<UUID, Tenista>()
 
     /**
      * Obtiene un valor de la cache
      * @param key Clave del valor a obtener
-     * @return Result<Tenista, CacheError> Valor obtenido de la cache o error si no existe el valor en la cache
+     * @return Tenista? Valor obtenido de la cache o null si no existe el valor en la cache
      * @author Javier Hernández
      * @since 1.0
      */
-    override fun get(key: Long): Result<Tenista, CacheError> {
-        logger.debug { "Obteniendo valor de la cache" }
-        return if (cache.containsKey(key)){
-            Ok(cache.getValue(key))
-        }else{
-            Err(CacheError.CacheErrorValid("No existe el valor en la cache"))
-        }
-    }
+    override fun get(key: UUID): Tenista? = cache[key]
 
     /**
-     * Obtiene el tamaño de la cache
-     * @param key Tamaño de la cache
+     * Guarda un valor en la cache
+     * @param key clave del valor a guardar
      * @param value Valor a guardar en la cache
-     * @return Result<Tenista, CacheError> Valor guardado en la cache o error si no se pudo guardar el valor en la cache
      * @author Javier Hernández
      * @since 1.0
      */
-    override fun put(key: Long, value: Tenista): Result<Tenista, CacheError> {
-        logger.debug { "Salvando valor en la cache" }
-        if (cache.size > cacheSize && !cache.containsKey(key)){
-            logger.debug { "Eliminando primer valor de la cache" }
-            cache.remove(cache.keys.first())
-        }
+    override fun put(key: UUID, value: Tenista) {
         cache[key] = value
-        return Ok(value)
     }
+
 
     /**
      * Elimina un valor de la cache
      * @param key Clave del valor a eliminar
-     * @return Result<Tenista, CacheError> Valor eliminado de la cache o error si no existe el valor en la cache
      * @author Javier Hernández
      * @since 1.0
      */
 
-    override fun remove(key: Long): Result<Tenista, CacheError> {
-        logger.debug { "Eliminando valor de la cache" }
-        return if (cache.containsKey(key)){
-            Ok(cache.remove(key)!!)
-        }else{
-            Err(CacheError.CacheErrorValid("No existe el valor en la cache"))
-        }
+    override fun remove(key: UUID) {
+        cache.remove(key)
     }
     /**
      * Limpia la cache
