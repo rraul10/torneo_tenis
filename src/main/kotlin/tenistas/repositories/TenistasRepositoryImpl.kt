@@ -1,6 +1,5 @@
 package tenistas.repositories
 
-import database.SqlDelightManager
 import org.lighthousegames.logging.logging
 import tenistas.mapper.logger
 import tenistas.mapper.toTenista
