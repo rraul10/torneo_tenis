@@ -2,7 +2,6 @@ package tenistas.repositories
 
 import org.lighthousegames.logging.logging
 import tenistas.mapper.logger
-import tenistas.mapper.toTenista
 import tenistas.models.Tenista
 import java.sql.Connection
 import java.sql.SQLException
