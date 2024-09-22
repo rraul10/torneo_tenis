@@ -8,16 +8,17 @@ import java.sql.DriverManager
 import java.sql.SQLException
 private val looger = logging()
 class DatabaseConnection {
-    private val databaseUrl = Config.dataBaseUrl
 
-    fun connect(): Connection?{
-        return try{
-            logger.debug{"Connecting to the database"}
-            DriverManager.getConnection(databaseUrl)
-        }catch (e: SQLException){
-            logger.error{"Error connecting to the database: ${e.message}"}
+     fun <T> useConnection(action: (Connection) -> T): T? {
+        var connection: Connection? = null
+        return try {
+            connection = DriverManager.getConnection(Config.dataBaseUrl)
+            action(connection)
+        } catch (e: SQLException) {
             e.printStackTrace()
             null
+        } finally {
+            connection?.close()
         }
     }
 }

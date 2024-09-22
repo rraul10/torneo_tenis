@@ -1,5 +1,6 @@
 package tenistas.repositories
 
+import database.DatabaseConnection
 import org.lighthousegames.logging.logging
 import tenistas.mapper.logger
 import tenistas.models.Tenista
@@ -7,6 +8,7 @@ import java.sql.Connection
 import java.sql.SQLException
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 
 private val looger = logging()
 
@@ -17,24 +19,27 @@ private val looger = logging()
  * @since 1.0
  */
 class TenistasRepositoryImpl(
-    private val connection: Connection
-): TenistasRepository {
-    fun createTable(){
-        val sql = """
-            CREATE TABLE IF NOT EXISTS tenistas(
-                id TEXT PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL,
-                pais TEXT NOT NULL,
-                altura INTEGER NOT NULL,
-                peso INTEGER NOT NULL,
-                puntos INTEGER NOT NULL,
-                mano TEXT NOT NULL,
-                fecha_nacimiento TEXT NOT NULL,
-                created_at TEXT NOT NULL,
-                upadated_at TEXT NOT NULL
-            );
-        """.trimIndent()
-        connection.createStatement().execute(sql)
+    private val dbConnection: DatabaseConnection
+) : TenistasRepository {
+    private val databaseConnection = dbConnection
+    fun createTable() {
+        dbConnection.useConnection { connection ->
+            val sql = """
+                CREATE TABLE IF NOT EXISTS tenistas(
+                    id TEXT PRIMARY KEY,
+                    nombre TEXT NOT NULL,
+                    pais TEXT NOT NULL,
+                    altura INTEGER NOT NULL,
+                    peso INTEGER NOT NULL,
+                    puntos INTEGER NOT NULL,
+                    mano TEXT NOT NULL,
+                    fecha_nacimiento TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                );
+            """.trimIndent()
+            connection.createStatement().execute(sql)
+        }
     }
 
     /**
@@ -46,32 +51,35 @@ class TenistasRepositoryImpl(
     override fun getAllTenistas(): List<Tenista> {
         looger.debug { "Obteniendo a todos los Tenistas" }
         val sql = "SELECT * FROM tenistas"
-        val tenistas = mutableListOf<Tenista>()
-        try{
-            connection.createStatement().use { statement ->
-                statement.executeQuery(sql).use { resultSet ->
-                    while (resultSet.next()) {
-                        val tenista = Tenista(
-                            resultSet.getLong("id"),
-                            resultSet.getString("nombre"),
-                            resultSet.getString("pais"),
-                            resultSet.getInt("altura"),
-                            resultSet.getInt("peso"),
-                            resultSet.getInt("puntos"),
-                            resultSet.getString("manos"),
-                            fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
-                            createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
-                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at")),
-                        )
-                        tenistas.add(tenista)
+
+        return databaseConnection.useConnection { connection ->
+            val tenistas = mutableListOf<Tenista>()
+            try {
+                connection.createStatement().use { statement ->
+                    statement.executeQuery(sql).use { resultSet ->
+                        while (resultSet.next()) {
+                            val tenista = Tenista(
+                                UUID.fromString(resultSet.getString("id")),
+                                resultSet.getString("nombre"),
+                                resultSet.getString("pais"),
+                                resultSet.getInt("altura"),
+                                resultSet.getInt("peso"),
+                                resultSet.getInt("puntos"),
+                                resultSet.getString("manos"),
+                                fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
+                                createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
+                                updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
+                            )
+                            tenistas.add(tenista)
+                        }
                     }
                 }
+            } catch (e: SQLException) {
+                looger.error { "Error al obtener los Tenistas: ${e.message}" }
+                e.printStackTrace()
             }
-        }catch (e: SQLException){
-            looger.error { "Error al obtener los Tenistas: ${e.message}" }
-            e.printStackTrace()
-        }
-        return tenistas
+            tenistas
+        } ?: emptyList()
     }
 
     /**
@@ -84,31 +92,35 @@ class TenistasRepositoryImpl(
 
     override fun getTenistaById(id: Long): Tenista? {
         looger.debug { "Obteniendo el Tenista con id: $id" }
-        val sql = "SELECT * FROM tenistas WHERE id = $id"
-        var tenista : Tenista? = null
-        try {
-            connection.prepareStatement(sql).use { statement ->
-                statement.setInt(1,id.toInt())
-                val resultSet = statement.executeQuery()
-                if (resultSet.next()){
-                    tenista = Tenista(
-                        resultSet.getLong("id"),
-                        resultSet.getString("nombre"),
-                        resultSet.getString("pais"),
-                        resultSet.getInt("altura"),
-                        resultSet.getInt("peso"),
-                        resultSet.getInt("puntos"),
-                        resultSet.getString("manos"),
-                        fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
-                        createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
-                        updatedAt = LocalDateTime.parse(resultSet.getString("updated_at")),
-                    )
+        val sql = "SELECT * FROM tenistas WHERE id = ?"
+
+        return databaseConnection.useConnection { connection ->
+            var tenista: Tenista? = null
+            try {
+                connection.prepareStatement(sql).use { statement ->
+                    statement.setString(1, id.toString())
+                    val resultSet = statement.executeQuery()
+                    if (resultSet.next()) {
+                        tenista = Tenista(
+                            UUID.fromString(resultSet.getString("id")),
+                            resultSet.getString("nombre"),
+                            resultSet.getString("pais"),
+                            resultSet.getInt("altura"),
+                            resultSet.getInt("peso"),
+                            resultSet.getInt("puntos"),
+                            resultSet.getString("manos"),
+                            fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
+                            createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
+                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
+                        )
+                    }
                 }
+            } catch (e: SQLException) {
+                logger.error { "Error al obtener el Tenista: ${e.message}" }
+                e.printStackTrace()
             }
-        }catch (e: SQLException){
-            logger.error { "Error al obtener el Tenista: ${e.message}" }
+            tenista
         }
-        return tenista
     }
 
     /**
@@ -120,14 +132,17 @@ class TenistasRepositoryImpl(
      */
     override fun getTenistaByName(nombre: String): Tenista? {
         looger.debug { "Obteniendo el Tenista con nombre: $nombre" }
-        val sql = "SELECT * FROM tenistas WHERE nombre =?"
-        var tenista: Tenista? = null
-        try {
-            connection.createStatement().use { statement ->
-                statement.executeQuery(sql).use { resultSet ->
+        val sql = "SELECT * FROM tenistas WHERE nombre = ?"
+
+        return databaseConnection.useConnection { connection ->
+            var tenista: Tenista? = null
+            try {
+                connection.prepareStatement(sql).use { statement ->
+                    statement.setString(1, nombre)
+                    val resultSet = statement.executeQuery()
                     if (resultSet.next()) {
                         tenista = Tenista(
-                            resultSet.getLong("id"),
+                            UUID.fromString(resultSet.getString("id")),
                             resultSet.getString("nombre"),
                             resultSet.getString("pais"),
                             resultSet.getInt("altura"),
@@ -136,16 +151,16 @@ class TenistasRepositoryImpl(
                             resultSet.getString("manos"),
                             fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
                             createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
-                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at")),
+                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
                         )
                     }
                 }
+            } catch (e: SQLException) {
+                looger.error { "Error al obtener el Tenista por nombre: ${e.message}" }
+                e.printStackTrace()
             }
-        } catch (e: SQLException) {
-            looger.error { "Error al obtener el Tenista por nombre: ${e.message}" }
-            e.printStackTrace()
+            tenista
         }
-        return tenista
     }
 
     /**
@@ -157,24 +172,26 @@ class TenistasRepositoryImpl(
      */
     override fun saveTenista(tenista: Tenista): Tenista {
         looger.debug { "Creando un nuevo Tenista con nombre: ${tenista.nombre}" }
-        val sql = "INSERT INTO tenistas (id,nombre,pais,altura,peso,puntos,mano,fecha_nacimiento,create_at,update_at) VALUES (?,?,?,?,?,?,?,?,?,?)"
-        try {
-            connection.prepareStatement(sql).use { statement ->
-                    statement.setLong(0, tenista.id)
-                    statement.setString(1, tenista.nombre)
-                    statement.setString(2, tenista.pais)
-                    statement.setInt(3, tenista.altura)
-                    statement.setInt(4, tenista.peso)
-                    statement.setInt(5, tenista.puntos)
-                    statement.setString(6, tenista.mano)
-                    statement.setString(7, tenista.fecha_nacimiento.toString())
-                    statement.setString(7, tenista.createdAt.toString())
-                    statement.setString(9, tenista.updatedAt.toString())
-
+        val sql = "INSERT INTO tenistas (id, nombre, pais, altura, peso, puntos, mano, fecha_nacimiento, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        databaseConnection.useConnection { connection ->
+            try {
+                connection.prepareStatement(sql).use { statement ->
+                    statement.setString(1, tenista.id.toString())
+                    statement.setString(2, tenista.nombre)
+                    statement.setString(3, tenista.pais)
+                    statement.setInt(4, tenista.altura)
+                    statement.setInt(5, tenista.peso)
+                    statement.setInt(6, tenista.puntos)
+                    statement.setString(7, tenista.mano)
+                    statement.setString(8, tenista.fecha_nacimiento.toString())
+                    statement.setString(9, tenista.createdAt.toString())
+                    statement.setString(10, tenista.updatedAt.toString())
+                    statement.executeUpdate()
+                }
+            } catch (e: SQLException) {
+                looger.error { "Error al guardar el Tenista: ${e.message}" }
+                e.printStackTrace()
             }
-        } catch (e: SQLException) {
-            looger.error { "Error al obtener el Tenista por nombre: ${e.message}" }
-            e.printStackTrace()
         }
         return tenista
     }
@@ -188,28 +205,41 @@ class TenistasRepositoryImpl(
      */
     override fun updateTenista(tenista: Tenista): Tenista? {
         looger.debug { "Actualizando el Tenista con id: ${tenista.id}" }
-        val sql = "UPDATE tenistas SET nombre=?, pais=?, altura=?, peso=?, puntos=?, mano=?,fecha_nacimiento=?,updated_at=? WHERE id=? "
-        try {
-            connection.createStatement().use { statement ->
-                statement.executeQuery(sql).use { resultSet ->
-                    resultSet.getLong("id")
-                    resultSet.getString("nombre")
-                    resultSet.getString("pais")
-                    resultSet.getInt("altura")
-                    resultSet.getInt("peso")
-                    resultSet.getInt("puntos")
-                    resultSet.getString("manos")
-                    tenista.fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento"))
-                    tenista.createdAt = LocalDateTime.parse(resultSet.getString("created_at"))
-                    tenista.updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
+        val sql = """
+        UPDATE tenistas 
+        SET nombre=?, pais=?, altura=?, peso=?, puntos=?, mano=?, fecha_nacimiento=?, updated_at=? 
+        WHERE id=?
+    """
 
+        return databaseConnection.useConnection { connection ->
+            try {
+                connection.prepareStatement(sql).use { statement ->
+                    statement.setString(1, tenista.nombre)
+                    statement.setString(2, tenista.pais)
+                    statement.setInt(3, tenista.altura)
+                    statement.setInt(4, tenista.peso)
+                    statement.setInt(5, tenista.puntos)
+                    statement.setString(6, tenista.mano)
+                    statement.setString(7, tenista.fecha_nacimiento.toString())
+                    statement.setString(8, tenista.updatedAt.toString())
+                    statement.setString(9, tenista.id.toString())
+
+                    val rowsAffected = statement.executeUpdate()
+
+                    if (rowsAffected > 0) {
+                        looger.debug { "Tenista actualizado correctamente." }
+                        tenista
+                    } else {
+                        looger.warn { "No se encontró el Tenista con id: ${tenista.id}" }
+                        null
                     }
                 }
-        }catch (e: SQLException){
-            looger.error { "Error al obtener los Tenistas: ${e.message}" }
-            e.printStackTrace()
+            } catch (e: SQLException) {
+                looger.error { "Error al actualizar el Tenista: ${e.message}" }
+                e.printStackTrace()
+                null
+            }
         }
-        return tenista
     }
 
     /**
