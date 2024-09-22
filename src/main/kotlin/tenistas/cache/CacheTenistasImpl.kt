@@ -16,7 +16,7 @@ import java.util.UUID
  * @since 1.0
  */
 class CacheTenistasImpl(
-    private val size: Int
+    val size: Int
 ): Cache<UUID, Tenista> {
     private val cache = mutableMapOf<UUID, Tenista>()
 
