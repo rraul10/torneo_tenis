@@ -97,8 +97,10 @@ class TenistasServiceImpl(
     override fun updateTenista(tenista: Tenista): Result<Tenista, TenistaError> {
         logger.debug { "Updating tenista: $tenista" }
         return tenistasRepository.updateTenista(tenista)
-            .also { cache.put(tenista.id, tenista) }
-            ?.let { Ok(it) }
+            ?.let {
+                cache.put(tenista.id, tenista)
+                Ok(it)
+            }
             ?: Err(TenistaError.TenistaNotUpdated("No se encontró el tenista con id: ${tenista.id}"))
     }
 
@@ -129,13 +131,20 @@ class TenistasServiceImpl(
      */
     override fun readCSV(file: File): Result<List<Tenista>, FileError> {
         logger.debug { "Reading CSV file: $file" }
-        return tenistasStorage.readCsv(file).andThen {tenistas ->
-            tenistas.forEach { p ->
-                tenistasRepository.saveTenista(p)
-                logger.debug { "Stored tenista: $p" }
+        return tenistasStorage.readCsv(file).mapBoth(
+            success = {
+                it.forEach { p ->
+                    tenistasRepository.saveTenista(p)
+                    logger.debug { "Stored tenista: $p" }
+                }
+                Ok(it)
+            },
+            failure = {
+                logger.error { "Error loading tenistas from file: $file" }
+                Err(FileError.FileReadingError("Error loading tenistas from file: $file"))
             }
-            Ok(tenistas)
-        }
+        )
+
     }
 
     /**
