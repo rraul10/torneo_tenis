@@ -2,6 +2,7 @@ package tenistas.models
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * Clase que representa un tenista.
@@ -19,7 +20,7 @@ import java.time.LocalDateTime
  * @since 1.0
  */
 data class Tenista(
-    val id: Long = -1,
+    val id: UUID = UUID.randomUUID(),
     val nombre: String,
     val pais: String,
     val altura: Int,
