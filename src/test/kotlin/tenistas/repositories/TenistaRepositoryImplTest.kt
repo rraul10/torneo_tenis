@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-class TenistasRepositoryImplTest {
+class TenistaRepositoryImplTest {
     private val connection = DatabaseConnection()
     private lateinit var repository: TenistasRepositoryImpl
     val Nadal = Tenista(
