@@ -158,18 +158,24 @@ class TenistasRepositoryImpl(
      */
     override fun saveTenista(tenista: Tenista): Tenista {
         looger.debug { "Creando un nuevo Tenista con nombre: ${tenista.nombre}" }
-         db.transaction{
-            db.insertTenista(
-                nombre = tenista.nombre,
-                pais = tenista.pais,
-                altura = tenista.altura.toLong(),
-                peso = tenista.peso.toLong(),
-                puntos = tenista.puntos.toLong(),
-                mano = tenista.mano,
-                fecha_nacimiento = tenista.fecha_nacimiento.toString(),
-                created_at = tenista.createdAt.toString(),
-                upadated_at = tenista.updatedAt.toString(),
-            )
+        val sql = "INSERT INTO tenistas (id,nombre,pais,altura,peso,puntos,mano,fecha_nacimiento,create_at,update_at) VALUES (?,?,?,?,?,?,?,?,?,?)"
+        try {
+            connection.prepareStatement(sql).use { statement ->
+                    statement.setLong(0, tenista.id)
+                    statement.setString(1, tenista.nombre)
+                    statement.setString(2, tenista.pais)
+                    statement.setInt(3, tenista.altura)
+                    statement.setInt(4, tenista.peso)
+                    statement.setInt(5, tenista.puntos)
+                    statement.setString(6, tenista.mano)
+                    statement.setString(7, tenista.fecha_nacimiento.toString())
+                    statement.setString(7, tenista.createdAt.toString())
+                    statement.setString(9, tenista.updatedAt.toString())
+
+            }
+        } catch (e: SQLException) {
+            looger.error { "Error al obtener el Tenista por nombre: ${e.message}" }
+            e.printStackTrace()
         }
         return tenista
     }
