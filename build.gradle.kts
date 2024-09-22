@@ -53,11 +53,3 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-
-sqldelight {
-    databases {
-        create("AppDatabase") {
-            packageName.set("dev.javierhvicente.database")
-        }
-    }
-}
