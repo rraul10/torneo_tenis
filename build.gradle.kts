@@ -30,10 +30,10 @@ dependencies {
 
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta9")
 
-
     testImplementation("io.mockk:mockk:1.13.10")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
+
 }
 
 tasks.test {
