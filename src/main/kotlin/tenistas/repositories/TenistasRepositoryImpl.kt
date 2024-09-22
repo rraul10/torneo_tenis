@@ -97,7 +97,32 @@ class TenistasRepositoryImpl(
      */
     override fun getTenistaByName(nombre: String): Tenista? {
         looger.debug { "Obteniendo el Tenista con nombre: $nombre" }
-        return db.selectByName(nombre).executeAsOneOrNull()?.toTenista()
+        val sql = "SELECT * FROM tenistas WHERE nombre =?"
+        var tenista: Tenista? = null
+        try {
+            connection.createStatement().use { statement ->
+                statement.executeQuery(sql).use { resultSet ->
+                    if (resultSet.next()) {
+                        tenista = Tenista(
+                            resultSet.getLong("id"),
+                            resultSet.getString("nombre"),
+                            resultSet.getString("pais"),
+                            resultSet.getInt("altura"),
+                            resultSet.getInt("peso"),
+                            resultSet.getInt("puntos"),
+                            resultSet.getString("manos"),
+                            fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
+                            createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
+                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at")),
+                        )
+                    }
+                }
+            }
+        } catch (e: SQLException) {
+            looger.error { "Error al obtener el Tenista por nombre: ${e.message}" }
+            e.printStackTrace()
+        }
+        return tenista
     }
 
     /**
