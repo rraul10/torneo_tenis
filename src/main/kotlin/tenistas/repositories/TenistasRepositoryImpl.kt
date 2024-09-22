@@ -89,7 +89,7 @@ class TenistasRepositoryImpl(
      * @since 1.0
      */
 
-    override fun getTenistaById(id: Long): Tenista? {
+    override fun getTenistaById(id: UUID): Tenista? {
         looger.debug { "Obteniendo el Tenista con id: $id" }
         val sql = "SELECT * FROM tenistas WHERE id = ?"
 
@@ -248,7 +248,7 @@ class TenistasRepositoryImpl(
      * @since 1.0
      * @author Javier Hernández
      */
-    override fun deleteById(id: Long): Tenista? {
+    override fun deleteById(id: UUID): Tenista? {
         looger.debug { "Eliminando el Tenista con id: $id" }
         val result = this.getTenistaById(id) ?: return null
         db.deleteById(id)
