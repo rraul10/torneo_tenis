@@ -4,6 +4,10 @@ import org.lighthousegames.logging.logging
 import tenistas.mapper.logger
 import tenistas.mapper.toTenista
 import tenistas.models.Tenista
+import java.sql.Connection
+import java.sql.SQLException
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 private val looger = logging()
 
@@ -14,19 +18,61 @@ private val looger = logging()
  * @since 1.0
  */
 class TenistasRepositoryImpl(
-    private val dbManager: SqlDelightManager
+    private val connection: Connection
 ): TenistasRepository {
-    private val db = dbManager.databaseQueries
+    fun createTable(){
+        val sql = """
+            CREATE TABLE IF NOT EXISTS tenistas(
+                id TEXT PRIMARY KEY AUTOINCREMENT,
+                nombre TEXT NOT NULL,
+                pais TEXT NOT NULL,
+                altura INTEGER NOT NULL,
+                peso INTEGER NOT NULL,
+                puntos INTEGER NOT NULL,
+                mano TEXT NOT NULL,
+                fecha_nacimiento TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                upadated_at TEXT NOT NULL
+            );
+        """.trimIndent()
+        connection.createStatement().execute(sql)
+    }
 
     /**
      * Obtiene a todos los tenistas de la base de datos
-     * @return List<Tenista>
+     * @return List<T enista>
      * @author Javier Hernández
      * @since 1.0
      */
     override fun getAllTenistas(): List<Tenista> {
         looger.debug { "Obteniendo a todos los Tenistas" }
-        return db.selectAll().executeAsList().map { it.toTenista() }
+        val sql = "SELECT * FROM tenistas"
+        val tenistas = mutableListOf<Tenista>()
+        try{
+            connection.createStatement().use { statement ->
+                statement.executeQuery(sql).use { resultSet ->
+                    while (resultSet.next()) {
+                        val tenista = Tenista(
+                            resultSet.getLong("id"),
+                            resultSet.getString("nombre"),
+                            resultSet.getString("pais"),
+                            resultSet.getInt("altura"),
+                            resultSet.getInt("peso"),
+                            resultSet.getInt("puntos"),
+                            resultSet.getString("manos"),
+                            fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
+                            createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
+                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at")),
+                        )
+                        tenistas.add(tenista)
+                    }
+                }
+            }
+        }catch (e: SQLException){
+            looger.error { "Error al obtener los Tenistas: ${e.message}" }
+            e.printStackTrace()
+        }
+        return tenistas
     }
 
     /**
