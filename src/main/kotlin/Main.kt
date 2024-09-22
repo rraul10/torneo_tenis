@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.mapBoth
 import config.Config
+import database.DatabaseConnection
 import org.lighthousegames.logging.logging
 import tenistas.cache.CacheTenistasImpl
 import tenistas.errors.ArgsErrors
@@ -36,7 +37,7 @@ fun main(args: Array<String>) {
 
     val tenistasService = TenistasServiceImpl(
         tenistasStorage = TenistasStorageImpl(),
-        tenistasRepository = TenistasRepositoryImpl(SqlDelightManager(Config)),
+        tenistasRepository = TenistasRepositoryImpl(DatabaseConnection()),
         cache = CacheTenistasImpl(Config.cacheSize)
     )
     tenistasService.readCSV(File(args[0])).mapBoth(

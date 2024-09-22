@@ -90,7 +90,7 @@ class TenistasRepositoryImpl(
      */
 
     override fun getTenistaById(id: UUID): Tenista? {
-        tenistas.repositories.logger.debug { "Obteniendo el Tenista con id: $id" }
+        looger.debug { "Obteniendo el Tenista con id: $id" }
         val sql = "SELECT * FROM tenistas WHERE id = ?"
 
         return databaseConnection.useConnection { connection ->
@@ -249,47 +249,9 @@ class TenistasRepositoryImpl(
      * @author Raúl Fernández
      */
     override fun deleteById(id: UUID): Tenista? {
-        logger.debug {"Eliminando el Tenista con id: $id"}
-        val sqlSelect = "SELECT * FROM tenistas WHERE id = ?"
-        val sqlDelete = "DELETE FROM tenistas WHERE id =?"
-        var deletedTenista: Tenista? = null
-
-        databaseConnection.useConnection { connection ->
-            try {
-                connection.prepareStatement(sqlSelect).use { selectStatement ->
-                    selectStatement.setString(1, id.toString())
-                    val resultSet = selectStatement.executeQuery()
-
-                    if (resultSet.next()) {
-                        deletedTenista = Tenista(
-                            UUID.fromString(resultSet.getString("id")),
-                            resultSet.getString("name"),
-                            resultSet.getString("pais"),
-                            resultSet.getInt("altura"),
-                            resultSet.getInt("peso"),
-                            resultSet.getInt("puntos"),
-                            resultSet.getString("mano"),
-                            fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
-                            createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
-                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
-                        )
-                    }
-                }
-                connection.prepareStatement(sqlDelete).use { deleteStatement ->
-                    deleteStatement.setString(1, id.toString())
-                    val rowsAffected = deleteStatement.executeUpdate()
-
-                    if (rowsAffected > 0) {
-                        logger.debug { "Tenista con id: $id eliminado correctamente" }
-                    } else {
-                        logger.warn { "No se encontro el tenista con id: $id para eliminar" }
-                    }
-                }
-            } catch (e: SQLException) {
-                logger.error { "Error al eliminar el Tenista: ${e.message}" }
-                e.printStackTrace()
-            }
-        }
-        return deletedTenista
+        looger.debug { "Eliminando el Tenista con id: $id" }
+        val result = this.getTenistaById(id) ?: return null
+        db.deleteById(id)
+        return result
     }
 }

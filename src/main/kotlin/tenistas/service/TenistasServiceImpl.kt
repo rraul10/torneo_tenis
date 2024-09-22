@@ -9,6 +9,8 @@ import tenistas.models.Tenista
 import tenistas.repositories.TenistasRepository
 import tenistas.storage.TenistasStorage
 import java.io.File
+import java.util.*
+
 private val logger = logging()
 
 /**
@@ -16,7 +18,7 @@ private val logger = logging()
  * @param tenistasStorage Almacenamiento de tenistas.
  * @param tenistasRepository Repositorio de tenistas.
  * @param cache Caché de tenistas.
- * @author Javier Hernández
+ * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
  * @since 1.0
  */
 class TenistasServiceImpl(
@@ -28,7 +30,7 @@ class TenistasServiceImpl(
      * Obtiene todos los tenistas.
      * @return Resultado con la lista de tenistas o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
     override fun getAllTenistas(): Result<List<Tenista>, TenistaError> {
         logger.debug { "Getting all tenistas" }
@@ -40,31 +42,29 @@ class TenistasServiceImpl(
      * @param id Id del tenista.
      * @return Resultado con el tenista o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
 
-    override fun getTenistaById(id: Long): Result<Tenista, TenistaError> {
+    override fun getTenistaById(id: UUID): Result<Tenista, TenistaError> {
         logger.debug { "Getting tenista by id: $id" }
-        return cache.get(id).mapBoth(
-            success = {
-                logger.debug { "Tenista from cache: $it" }
-                Ok(it)
-            },
-            failure = {
+        return cache.get(id)
+            ?.let {
                 logger.debug { "Estudiante no encontrado en la cache" }
                 tenistasRepository.getTenistaById(id)
-                    ?.let { Ok(it) }
-                    ?: Err(TenistaError.TenistaNotFound("Tenista no encontrado con id: $id"))
             }
-        )
+            ?.let { Ok(it) }
+            ?: Err(TenistaError.TenistaNotFound("Tenista no encontrado con id: $id"))
     }
+
+
+
 
     /**
      * Obtiene un tenista por su nombre.
      * @param nombre Nombre del tenista.
      * @return Resultado con el tenista o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
 
     override fun getTenistaByNombre(nombre: String): Result<Tenista, TenistaError> {
@@ -79,7 +79,7 @@ class TenistasServiceImpl(
      * @param tenista Tenista a almacenar.
      * @return Resultado con el tenista almacenado o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
     override fun createTenista(tenista: Tenista): Result<Tenista, TenistaError> {
         logger.debug { "Creating tenista: $tenista" }
@@ -91,14 +91,16 @@ class TenistasServiceImpl(
      * @param tenista Tenista a actualizar.
      * @return Resultado con el tenista actualizado o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
 
     override fun updateTenista(tenista: Tenista): Result<Tenista, TenistaError> {
         logger.debug { "Updating tenista: $tenista" }
         return tenistasRepository.updateTenista(tenista)
-            .also { cache.put(tenista.id, tenista) }
-            ?.let { Ok(it) }
+            ?.let {
+                cache.put(tenista.id, tenista)
+                Ok(it)
+            }
             ?: Err(TenistaError.TenistaNotUpdated("No se encontró el tenista con id: ${tenista.id}"))
     }
 
@@ -107,9 +109,9 @@ class TenistasServiceImpl(
      * @param id Id del tenista.
      * @return Resultado con un valor unitario o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
-    override fun deleteTenistaById(id: Long): Result<Unit, TenistaError> {
+    override fun deleteTenistaById(id: UUID): Result<Unit, TenistaError> {
         logger.debug { "Deleting tenista by id: $id" }
         return tenistasRepository.deleteById(id)
             ?.let {
@@ -125,17 +127,24 @@ class TenistasServiceImpl(
      * @param file Archivo CSV.
      * @return Resultado con la lista de tenistas o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
     override fun readCSV(file: File): Result<List<Tenista>, FileError> {
         logger.debug { "Reading CSV file: $file" }
-        return tenistasStorage.readCsv(file).andThen {tenistas ->
-            tenistas.forEach { p ->
-                tenistasRepository.saveTenista(p)
-                logger.debug { "Stored tenista: $p" }
+        return tenistasStorage.readCsv(file).mapBoth(
+            success = {
+                it.forEach { p ->
+                    tenistasRepository.saveTenista(p)
+                    logger.debug { "Stored tenista: $p" }
+                }
+                Ok(it)
+            },
+            failure = {
+                logger.error { "Error loading tenistas from file: $file" }
+                Err(FileError.FileReadingError("Error loading tenistas from file: $file"))
             }
-            Ok(tenistas)
-        }
+        )
+
     }
 
     /**
@@ -144,7 +153,7 @@ class TenistasServiceImpl(
      * @param tenistas Lista de tenistas.
      * @return Resultado con un valor unitario o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
     override fun writeCSV(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
         logger.debug { "Writing CSV file: $file" }
@@ -157,7 +166,7 @@ class TenistasServiceImpl(
      * @param tenistas Lista de tenistas.
      * @return Resultado con un valor unitario o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
 
     override fun writeJson(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
@@ -171,7 +180,7 @@ class TenistasServiceImpl(
      * @param tenistas Lista de tenistas.
      * @return Resultado con un valor unitario o un error.
      * @since 1.0
-     * @author Javier Hernández
+     * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
 
     override fun writeXml(file: File, tenistas: List<Tenista>): Result<Unit, FileError> {
