@@ -7,8 +7,6 @@ import config.Config
 import database.DatabaseConnection
 import org.lighthousegames.logging.logging
 import tenistas.cache.CacheTenistasImpl
-import tenistas.exceptions.ArgsErrors
-import tenistas.exceptions.CsvErrors
 import tenistas.repositories.TenistasRepositoryImpl
 import tenistas.service.TenistasServiceImpl
 import tenistas.storage.TenistasStorageImpl
@@ -22,32 +20,17 @@ fun main(args: Array<String>) {
     if(args.isEmpty()) {
         println("No arguments provided.")
     }
-    validateArgsEntrada(args[0]).mapBoth(
-        success = { println("Archivo válido: $it") },
-        failure = {
-            Err(ArgsErrors.InvalidArgumentsError("Error: El argumento introducido no es válido"))
-        }
-    )
-    validateCsvFormat(args[0]).mapBoth(
-        success = { println("Formato CSV válido: $it") },
-        failure = {
-            Err(CsvErrors.InvalidCsvFormat("Error: El formato del archivo no es CSV"))
-        }
-    )
+    validateArgsEntrada(args[0])
+    validateCsvFormat(args[0])
 
     val tenistasService = TenistasServiceImpl(
         tenistasStorage = TenistasStorageImpl(),
         tenistasRepository = TenistasRepositoryImpl(DatabaseConnection()),
         cache = CacheTenistasImpl(Config.cacheSize)
     )
-    tenistasService.readCSV(File(args[0])).mapBoth(
-        success = { println("CSV leído correctamente") },
-        failure = {
-            Err(CsvErrors.InvalidCsvFormat("Error: No se ha podido leer el archivo CSV"))
-        }
-    )
+    tenistasService.readCSV(File(args[0]))
 
-    val listaTenistas = tenistasService.getAllTenistas().value
+    val listaTenistas = tenistasService.getAllTenistas()
 
     terminal.println(rgb("#08ff00")("Consultas de los tenistas: 🎾\n"))
     terminal.println(TextColors.blue("Tenistas ordenados por ranking\n"))

@@ -7,6 +7,7 @@ import tenistas.exceptions.FileException
 import tenistas.exceptions.TenistaException
 import tenistas.models.Tenista
 import tenistas.repositories.TenistasRepository
+import tenistas.storage.TenistasStorage
 import java.io.File
 import java.util.*
 
@@ -21,7 +22,7 @@ private val logger = logging()
  * @since 1.0
  */
 class TenistasServiceImpl(
-    private val tenistasStorage:TenistasStorage,
+    private val tenistasStorage: TenistasStorage,
     private val tenistasRepository: TenistasRepository,
     private val cache: CacheTenistasImpl
 ): TenistasService {
@@ -114,8 +115,7 @@ class TenistasServiceImpl(
             ?.let {
                 cache.remove(id)
             }
-            ?: throw TenistaException.TenistaNotDeleted("No se puedo eliminar al tenista con id: $id"))
-
+            ?: throw TenistaException.TenistaNotDeleted("No se puedo eliminar al tenista con id: $id")
     }
 
     /**
@@ -136,10 +136,9 @@ class TenistasServiceImpl(
 
         }else{
                 logger.error { "Error loading tenistas from file: $file" }
-                throw FileException.FileReadingException("Error loading tenistas from file: $file"))
+                throw FileException.FileReadingException("Error loading tenistas from file: $file")
             }
-
-
+        return lista
     }
 
     /**
