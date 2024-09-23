@@ -90,7 +90,7 @@ class TenistasRepositoryImpl(
      */
 
     override fun getTenistaById(id: UUID): Tenista? {
-        looger.debug { "Obteniendo el Tenista con id: $id" }
+        logger.debug { "Obteniendo el Tenista con id: $id" }
         val sql = "SELECT * FROM tenistas WHERE id = ?"
 
         return databaseConnection.useConnection { connection ->
@@ -249,7 +249,7 @@ class TenistasRepositoryImpl(
      * @author Raúl Fernández
      */
     override fun deleteById(id: UUID): Tenista? {
-        looger.debug { "Eliminando el Tenista con id: $id" }
+        logger.debug { "Eliminando el Tenista con id: $id" }
         val result = this.getTenistaById(id) ?: return null
         db.deleteById(id)
         return result
