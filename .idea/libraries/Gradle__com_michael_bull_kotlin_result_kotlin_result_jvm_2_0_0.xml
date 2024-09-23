@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.michael-bull.kotlin-result:kotlin-result-jvm:2.0.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.michael-bull.kotlin-result" artifactId="kotlin-result-jvm" version="2.0.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.michael-bull.kotlin-result/kotlin-result-jvm/2.0.0/b7c82b0adb8a8be76e7d7417cd9ee32d2ba3676/kotlin-result-jvm-2.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

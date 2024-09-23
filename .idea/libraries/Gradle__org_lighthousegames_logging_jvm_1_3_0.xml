@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.lighthousegames:logging-jvm:1.3.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.lighthousegames" artifactId="logging-jvm" version="1.3.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.lighthousegames/logging-jvm/1.3.0/67e9c08256ae21e21f0092dd4ec59c02f2419e9f/logging-jvm-1.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
