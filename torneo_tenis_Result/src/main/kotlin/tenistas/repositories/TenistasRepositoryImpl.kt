@@ -9,10 +9,10 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-private val looger = logging()
+private val logger = logging()
 
 /**
- * Repositorio de tenistas que se comunica con la base de datosç
+ * Repositorio de tenistas que se comunica con la base de datos.
  * @param dbManager: SqlDelightManager
  * @author Javier Hernández
  * @since 1.0
@@ -43,12 +43,12 @@ class TenistasRepositoryImpl(
 
     /**
      * Obtiene a todos los tenistas de la base de datos
-     * @return List<T enista>
+     * @return List<Tenista>
      * @author Javier Hernández
      * @since 1.0
      */
     override fun getAllTenistas(): List<Tenista> {
-        looger.debug { "Obteniendo a todos los Tenistas" }
+        tenistas.repositories.logger.debug { "Obteniendo a todos los Tenistas" }
         val sql = "SELECT * FROM tenistas"
 
         return databaseConnection.useConnection { connection ->
@@ -74,7 +74,7 @@ class TenistasRepositoryImpl(
                     }
                 }
             } catch (e: SQLException) {
-                looger.error { "Error al obtener los Tenistas: ${e.message}" }
+                logger.error { "Error al obtener los Tenistas: ${e.message}" }
                 e.printStackTrace()
             }
             tenistas
@@ -83,7 +83,7 @@ class TenistasRepositoryImpl(
 
     /**
      * Obtiene a un tenista por su id
-     * @param id: Long
+     * @param id: UUID
      * @return Tenista? - Tenista encontrado o null si no existe
      * @author Samuel Cortés
      * @since 1.0
@@ -130,7 +130,7 @@ class TenistasRepositoryImpl(
      * @since 1.0
      */
     override fun getTenistaByName(nombre: String): Tenista? {
-        looger.debug { "Obteniendo el Tenista con nombre: $nombre" }
+        tenistas.repositories.logger.debug { "Obteniendo el Tenista con nombre: $nombre" }
         val sql = "SELECT * FROM tenistas WHERE nombre = ?"
 
         return databaseConnection.useConnection { connection ->
@@ -155,7 +155,7 @@ class TenistasRepositoryImpl(
                     }
                 }
             } catch (e: SQLException) {
-                looger.error { "Error al obtener el Tenista por nombre: ${e.message}" }
+                tenistas.repositories.logger.error { "Error al obtener el Tenista por nombre: ${e.message}" }
                 e.printStackTrace()
             }
             tenista
@@ -165,12 +165,12 @@ class TenistasRepositoryImpl(
     /**
      * Guarda un nuevo tenista en la base de datos
      * @param tenista: Tenista
-     * @return Tenista - Tenista guardado en la base de datos con su id asignado
+     * @return Tenista - Tenista guardado en la base de datos con su id asignado.
      * @author Yahya El Hadri
      * @since 1.0
      */
     override fun saveTenista(tenista: Tenista): Tenista {
-        looger.debug { "Creando un nuevo Tenista con nombre: ${tenista.nombre}" }
+        tenistas.repositories.logger.debug { "Creando un nuevo Tenista con nombre: ${tenista.nombre}" }
         val sql = "INSERT INTO tenistas (id, nombre, pais, altura, peso, puntos, mano, fecha_nacimiento, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         databaseConnection.useConnection { connection ->
             try {
@@ -188,7 +188,7 @@ class TenistasRepositoryImpl(
                     statement.executeUpdate()
                 }
             } catch (e: SQLException) {
-                looger.error { "Error al guardar el Tenista: ${e.message}" }
+                tenistas.repositories.logger.error { "Error al guardar el Tenista: ${e.message}" }
                 e.printStackTrace()
             }
         }
@@ -203,7 +203,7 @@ class TenistasRepositoryImpl(
      * @author Javier Ruiz
      */
     override fun updateTenista(tenista: Tenista): Tenista? {
-        looger.debug { "Actualizando el Tenista con id: ${tenista.id}" }
+        tenistas.repositories.logger.debug { "Actualizando el Tenista con id: ${tenista.id}" }
         val sql = """
         UPDATE tenistas 
         SET nombre=?, pais=?, altura=?, peso=?, puntos=?, mano=?, fecha_nacimiento=?, updated_at=? 
@@ -226,15 +226,15 @@ class TenistasRepositoryImpl(
                     val rowsAffected = statement.executeUpdate()
 
                     if (rowsAffected > 0) {
-                        looger.debug { "Tenista actualizado correctamente." }
+                        tenistas.repositories.logger.debug { "Tenista actualizado correctamente." }
                         tenista
                     } else {
-                        looger.warn { "No se encontró el Tenista con id: ${tenista.id}" }
+                        tenistas.repositories.logger.warn { "No se encontró el Tenista con id: ${tenista.id}" }
                         null
                     }
                 }
             } catch (e: SQLException) {
-                looger.error { "Error al actualizar el Tenista: ${e.message}" }
+                tenistas.repositories.logger.error { "Error al actualizar el Tenista: ${e.message}" }
                 e.printStackTrace()
                 null
             }
@@ -243,10 +243,10 @@ class TenistasRepositoryImpl(
 
     /**
      * Elimina un tenista de la base de datos
-     * @param id: Long
+     * @param id: UUID
      * @return Tenista? - Tenista eliminado o null si no existe el tenista con el id proporcionado
      * @since 1.0
-     * @author Javier Hernández
+     * @author Raúl Fernández
      */
     override fun deleteById(id: UUID): Tenista? {
         looger.debug { "Eliminando el Tenista con id: $id" }
@@ -254,5 +254,4 @@ class TenistasRepositoryImpl(
         db.deleteById(id)
         return result
     }
-
 }
