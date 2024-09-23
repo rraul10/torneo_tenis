@@ -1,0 +1,33 @@
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener los Tenistas: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista por nombre: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista por nombre: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista por nombre: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:39:54 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:41:48 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:41:49 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:42:56 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:42:56 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:45:48 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:45:48 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:45:48 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:48:05 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:48:05 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener el Tenista: no such column: 'manos'
+2024-09-24 00:50:15 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
+2024-09-24 00:50:15 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al obtener los Tenistas: no such column: 'manos'

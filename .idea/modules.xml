@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/torneo_tenis.iml" filepath="$PROJECT_DIR$/.idea/torneo_tenis.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/torneo_tenis.main.iml" filepath="$PROJECT_DIR$/.idea/modules/torneo_tenis.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/torneo_tenis.test.iml" filepath="$PROJECT_DIR$/.idea/modules/torneo_tenis.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/torneo_tenis_Exceptions.iml" filepath="$PROJECT_DIR$/.idea/modules/torneo_tenis_Exceptions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/torneo_tenis_Exceptions.main.iml" filepath="$PROJECT_DIR$/.idea/modules/torneo_tenis_Exceptions.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/torneo_tenis_Exceptions.test.iml" filepath="$PROJECT_DIR$/.idea/modules/torneo_tenis_Exceptions.test.iml" />
     </modules>
   </component>
 </project>
