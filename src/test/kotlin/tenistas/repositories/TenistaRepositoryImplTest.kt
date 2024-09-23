@@ -79,4 +79,24 @@ class TenistaRepositoryImplTest {
         assertNotEquals(Nadal, tenista)
     }
 
+    @Test
+    fun deleteById (){
+        val result = repository.deleteById(Nadal.id)
+
+        assertAll(
+            { assert(result?.nombre == Nadal.nombre)},
+            { assert(result?.id == Nadal.id)}
+        )
+    }
+
+    fun deleteNotFound() {
+        val id = UUID.fromString("004c5d50-30a3-4416-a9c4-209b63d8f78V")
+
+        // Act
+        val result = repository.deleteById(id)
+
+        // Assert
+        assert(result == null)
+    }
+
 }
