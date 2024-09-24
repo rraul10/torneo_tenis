@@ -57,9 +57,4 @@ class CacheTenistasImpl(
         logger.debug { "Limpiando cache" }
         cache.clear()
     }
-
-    fun getCurrentSize(): Int {
-        return cache.size
-    }
-
 }

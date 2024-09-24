@@ -9,7 +9,7 @@ import java.util.UUID
 
 interface TenistasService {
     fun getAllTenistas(): Result<List<Tenista>, TenistaError>
-    fun getTenistaById(id: UUID): Result<Tenista, TenistaError>
+    fun getTenistaById(id: Long): Result<Tenista, TenistaError>
     fun getTenistaByNombre(nombre: String): Result<Tenista, TenistaError>
     fun createTenista(tenista: Tenista): Result<Tenista, TenistaError>
     fun updateTenista(id: UUID,tenista: Tenista): Result<Tenista, TenistaError>

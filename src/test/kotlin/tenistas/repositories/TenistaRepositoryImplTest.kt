@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 class TenistaRepositoryImplTest {
     private val connection = DatabaseConnection()
     private lateinit var repository: TenistasRepositoryImpl
-    val Nadal = Tenista(UUID.fromString("004c5d50-30a3-4416-a9c4-209b63d8f78c"),"Rafael Nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
+    val Nadal = Tenista(1L,"Rafael Nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
     @BeforeEach
     fun setUp(){
         repository = TenistasRepositoryImpl(connection)
@@ -32,14 +32,14 @@ class TenistaRepositoryImplTest {
         assertAll(
             {assert(result.size == 1)},
             {assert(result[0].nombre == "Rafael Nadal")},
-            { assertEquals(UUID.fromString("004c5d50-30a3-4416-a9c4-209b63d8f78c"), result[0].id) }
+            { assertEquals(1L, result[0].id) }
         )
     }
 
     @Test
     fun saveTenista() {
         val tenista=Tenista(
-            id = UUID.fromString("fb00de71-22ed-40ff-92d4-ad8aba256446"),
+            id = 999999L,
             nombre = "TestNombre",
             pais="TestPais",
             altura= 180,
@@ -95,7 +95,7 @@ class TenistaRepositoryImplTest {
     }
 
     fun deleteNotFound() {
-        val id = UUID.fromString("004c5d50-30a3-4416-a9c4-209b63d8f78V")
+        val id = 999999999999999L
 
         // Act
         val result = repository.deleteById(id)

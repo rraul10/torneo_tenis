@@ -72,7 +72,7 @@ class TenistasRepositoryImpl(
                     statement.executeQuery(sql).use { resultSet ->
                         while (resultSet.next()) {
                             val tenista = Tenista(
-                                UUID.fromString(resultSet.getString("id")),
+                                resultSet.getLong(resultSet.getString("id")),
                                 resultSet.getString("nombre"),
                                 resultSet.getString("pais"),
                                 resultSet.getInt("altura"),
@@ -103,7 +103,7 @@ class TenistasRepositoryImpl(
      * @since 1.0
      */
 
-    override fun getTenistaById(id: UUID): Tenista? {
+    override fun getTenistaById(id: Long): Tenista? {
         logger.debug { "Obteniendo el Tenista con id: $id" }
         val sql = "SELECT * FROM tenistas WHERE id = ?"
 
@@ -115,7 +115,7 @@ class TenistasRepositoryImpl(
                     val resultSet = statement.executeQuery()
                     if (resultSet.next()) {
                         tenista = Tenista(
-                            UUID.fromString(resultSet.getString("id")),
+                            resultSet.getLong("id"),
                             resultSet.getString("nombre"),
                             resultSet.getString("pais"),
                             resultSet.getInt("altura"),
@@ -155,7 +155,7 @@ class TenistasRepositoryImpl(
                     val resultSet = statement.executeQuery()
                     if (resultSet.next()) {
                         tenista = Tenista(
-                            UUID.fromString(resultSet.getString("id")),
+                            resultSet.getLong("id"),
                             resultSet.getString("nombre"),
                             resultSet.getString("pais"),
                             resultSet.getInt("altura"),

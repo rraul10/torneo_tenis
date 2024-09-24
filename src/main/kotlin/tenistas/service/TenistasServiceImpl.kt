@@ -9,7 +9,6 @@ import tenistas.models.Tenista
 import tenistas.repositories.TenistasRepository
 import tenistas.storage.TenistasStorage
 import java.io.File
-import java.util.*
 
 private val logger = logging()
 
@@ -45,7 +44,7 @@ class TenistasServiceImpl(
      * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
 
-    override fun getTenistaById(id: UUID): Result<Tenista, TenistaError> {
+    override fun getTenistaById(id: Long): Result<Tenista, TenistaError> {
         logger.debug { "Getting tenista by id: $id" }
         return cache.get(id)
             ?.let {
@@ -111,7 +110,7 @@ class TenistasServiceImpl(
      * @since 1.0
      * @author Javier Hernández, Yahya el hadri , Javier Ruiz, Alvaro herrero, Samuel Cortes, Raul Fernandez
      */
-    override fun deleteTenistaById(id: UUID): Result<Unit, TenistaError> {
+    override fun deleteTenistaById(id: Long): Result<Unit, TenistaError> {
         logger.debug { "Deleting tenista by id: $id" }
         return tenistasRepository.deleteById(id)
             ?.let {

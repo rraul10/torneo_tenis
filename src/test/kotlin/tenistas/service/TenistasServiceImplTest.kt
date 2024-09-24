@@ -8,10 +8,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.just
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.extension.ExtendWith
@@ -40,7 +38,7 @@ class TenistasServiceImplTest {
     lateinit var services: TenistasServiceImpl
 
     private val tenista= Tenista(
-        id = UUID.fromString("fb00de71-22ed-40ff-92d4-ad8aba256446"),
+        id = 9999L,
         nombre = "TestNombre",
         pais="TestPais",
         altura= 180,

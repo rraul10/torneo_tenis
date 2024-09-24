@@ -7,12 +7,9 @@
     <list default="true" id="22d0c19b-6bf1-4399-a3ae-2b524f675b5a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/logs/torneo_tenis.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/torneo_tenis.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/tenistas/repositories/TenistasRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/tenistas/repositories/TenistasRepositoryImpl.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/tenistas/repositories/TenistaRepositoryImplTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/tenistas/repositories/TenistaRepositoryImplTest.kt" afterDir="false" />
-=======
->>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +43,6 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< Updated upstream
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Gradle.TenistaRepositoryImplTest.executor": "Run",
@@ -200,7 +196,6 @@
       </list>
     </recent_temporary>
   </component>
-=======
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -216,7 +211,6 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
->>>>>>> Stashed changes
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -239,17 +233,5 @@
       <workItem from="1727132965601" duration="75000" />
       <workItem from="1727133051392" duration="3000" />
       <workItem from="1727133487243" duration="747000" />
-<<<<<<< Updated upstream
-      <workItem from="1727164486618" duration="132000" />
-      <workItem from="1727165252768" duration="2930000" />
-=======
       <workItem from="1727134822243" duration="121000" />
       <workItem from="1727135672398" duration="300000" />
->>>>>>> Stashed changes
-    </task>
-    <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-</project>
