@@ -48,7 +48,7 @@ class TenistasStorageImpl: TenistasStorage {
                 lines
             }
 
-            Ok(dataLines
+            return Ok(dataLines
                 .map {
                     val data = it.split(",")
                     if(validateCsvEntries(data).isErr) {
@@ -68,9 +68,10 @@ class TenistasStorageImpl: TenistasStorage {
                     ).toTenista()
                 }
             )
+
         } catch (e: Exception) {
             logger.error(e) { "Error loading tenistas from file: $file" }
-            Err(FileError.FileReadingError("Error loading tenistas from file: $file"))
+            return Err(FileError.FileReadingError("Error loading tenistas from file: $file"))
         }
     }
 

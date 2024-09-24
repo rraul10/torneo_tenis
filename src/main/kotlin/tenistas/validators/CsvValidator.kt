@@ -73,7 +73,7 @@ fun validateCsvEntries(item: List<String>): Result<List<String>, CsvErrors> {
         !item[7].matches(regexFechaISO) -> Err(CsvErrors.InvalidTenistaFormat("La fecha de nacimiento debe tener el formato 'AAAA-MM-DD': ${item[7]}"))
         item[7] > LocalDate.now().toString() -> Err(CsvErrors.InvalidTenistaFormat("La fecha de nacimiento no puede ser superior a la fecha actual: ${item[7]}"))
 
-        else -> Ok(item)
+        else ->{ Ok(item) }
     }
 }
 

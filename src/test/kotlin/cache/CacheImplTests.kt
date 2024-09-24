@@ -9,12 +9,12 @@ import tenistas.cache.CacheTenistasImpl
 import tenistas.models.Tenista
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CacheTenistasImplTest {
     private val cache = CacheTenistasImpl(Config.cacheSize)
-    val nadal = Tenista(1L, "Rafael Nadal", "España", 185, 75, 2650, "Derecha", LocalDate.of(1986, 6, 3), LocalDateTime.now(), LocalDateTime.now())
-
+    val nadal = Tenista(UUID.fromString("23d41191-8a78-4c02-9127-06e76b56af17") ,"Rafael nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
     @BeforeEach
     fun setUp() {
         cache.clear()
@@ -34,7 +34,7 @@ class CacheTenistasImplTest {
     @Test
     fun getNotFound() {
         cache.put(nadal.id, nadal)
-        val result = cache.get(2L)
+        val result = cache.get(UUID.fromString("23d41191-8a78-4c02-9127-06e76b56af16"))
 
         assertAll(
             { assertEquals(cache.getCurrentSize(), 1) },
