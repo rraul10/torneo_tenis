@@ -14,7 +14,7 @@ import java.util.*
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CacheTenistasImplTest {
     private val cache = CacheTenistasImpl(Config.cacheSize)
-    val nadal = Tenista(UUID.fromString("9ee8f54f-0a4f-40bc-9517-17ebc7583c37"), "Rafael Nadal", "España", 185, 75, 2650, "Derecha", LocalDate.of(1986, 6, 3), LocalDateTime.now(), LocalDateTime.now())
+    val nadal = Tenista(UUID.fromString("23d41191-8a78-4c02-9127-06e76b56af17") ,"Rafael nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
 
     @BeforeEach
     fun setUp() {
@@ -35,7 +35,7 @@ class CacheTenistasImplTest {
     @Test
     fun getNotFound() {
         cache.put(nadal.id, nadal)
-        val result = cache.get(UUID.fromString("b120639b-ffc0-4d64-a5de-05a715d0849c"))
+        val result = cache.get(UUID.fromString("23d41191-8a78-4c02-9127-06e76b56af16"))
 
         assertAll(
             { assertEquals(cache.getCurrentSize(), 1) },

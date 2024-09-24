@@ -13,11 +13,10 @@ import kotlin.test.assertEquals
 class TenistaRepositoryImplTest {
     private val connection = DatabaseConnection()
     private lateinit var repository: TenistasRepositoryImpl
-    val Nadal = Tenista(UUID.fromString("004c5d50-30a3-4416-a9c4-209b63d8f78c"),"Rafael Nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
-    @BeforeEach
+    val nadal = Tenista(UUID.fromString("23d41191-8a78-4c02-9127-06e76b56af17") ,"Rafael nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
     fun setUp(){
         repository = TenistasRepositoryImpl(connection)
-        repository.saveTenista(Nadal)
+        repository.saveTenista(nadal)
     }
 
 
@@ -65,27 +64,27 @@ class TenistaRepositoryImplTest {
         val tenista = repository.getTenistaByName("Rafael Nadal")
         //assert
         assertNotNull(tenista)
-        assertEquals(Nadal, tenista)
+        assertEquals(nadal, tenista)
     }
 
     @Test
     fun getTenistaByNameNotFound() {
         //arrange
         //act
-        repository.saveTenista(Nadal)
+        repository.saveTenista(nadal)
         val tenista = repository.getTenistaByName("Ra")
         //assert
         assertNull(tenista)
-        assertNotEquals(Nadal, tenista)
+        assertNotEquals(nadal, tenista)
     }
 
     @Test
     fun deleteById (){
-        val result = repository.deleteById(Nadal.id)
+        val result = repository.deleteById(nadal.id)
 
         assertAll(
-            { assert(result?.nombre == Nadal.nombre)},
-            { assert(result?.id == Nadal.id)}
+            { assert(result?.nombre == nadal.nombre)},
+            { assert(result?.id == nadal.id)}
         )
     }
 
