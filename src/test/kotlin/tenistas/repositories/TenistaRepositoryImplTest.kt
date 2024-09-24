@@ -14,6 +14,7 @@ class TenistaRepositoryImplTest {
     private val connection = DatabaseConnection()
     private lateinit var repository: TenistasRepositoryImpl
     val nadal = Tenista(UUID.fromString("23d41191-8a78-4c02-9127-06e76b56af17") ,"Rafael nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
+    @BeforeEach
     fun setUp(){
         repository = TenistasRepositoryImpl(connection)
         repository.saveTenista(nadal)
@@ -25,8 +26,7 @@ class TenistaRepositoryImplTest {
         val result = repository.getAllTenistas()
         assertAll(
             {assert(result.size == 1)},
-            {assert(result[0].nombre == "Rafael Nadal")},
-            { assertEquals(UUID.fromString("004c5d50-30a3-4416-a9c4-209b63d8f78c"), result[0].id) }
+            {assert(result[0].nombre == nadal.nombre)},
         )
     }
 
@@ -58,10 +58,29 @@ class TenistaRepositoryImplTest {
     }
 
     @Test
+    fun getTenistaById() {
+        val result = repository.getTenistaById(nadal.id)
+        assertAll(
+            {assert(result?.nombre == nadal.nombre)},
+            {assert(result?.id == nadal.id)}
+        )
+    }
+    @Test
+    fun getTenistaByIdNotFound() {
+        val id = UUID.fromString("18b81a66-d11e-4659-88fa-bbac4d8f88dc")
+
+        // Act
+        val result = repository.getTenistaById(id)
+
+        // Assert
+        assert(result ==null)
+        }
+
+    @Test
     fun getTenistaByName() {
         //arrange
         //act
-        val tenista = repository.getTenistaByName("Rafael Nadal")
+        val tenista = repository.getTenistaByName(nadal.nombre)
         //assert
         assertNotNull(tenista)
         assertEquals(nadal, tenista)
@@ -79,6 +98,37 @@ class TenistaRepositoryImplTest {
     }
 
     @Test
+    fun updateTenista() {
+        val tenista = Tenista(
+            id = nadal.id,
+            nombre = "Rafael Nadal",
+            pais = "España",
+            altura = 185,
+            peso = 85,
+            puntos = 2650,
+            mano = "Derecha",
+            fecha_nacimiento = LocalDate.of(1985, 10, 25)
+        )
+
+        val result = repository.updateTenista(nadal.id, tenista)
+
+        assertAll(
+            { assert(result?.nombre == tenista.nombre) },
+            { assert(result?.pais == tenista.pais) },
+            { assert(result?.altura == tenista.altura) },
+            { assert(result?.peso == tenista.peso) },
+            { assert(result?.puntos == tenista.puntos) },
+        )
+    }
+
+    @Test
+    fun updateNotFoundTenista() {
+        val id = UUID.fromString("18b81a66-d11e-4659-88fa-bbac4d8f88dc")
+        val result = repository.updateTenista(id, nadal)
+        assertNull(result)
+    }
+
+    @Test
     fun deleteById (){
         val result = repository.deleteById(nadal.id)
 
@@ -88,14 +138,15 @@ class TenistaRepositoryImplTest {
         )
     }
 
+    @Test
     fun deleteNotFound() {
-        val id = UUID.fromString("004c5d50-30a3-4416-a9c4-209b63d8f78V")
+        val id = UUID.fromString("18b81a66-d11e-4659-88fa-bbac4d8f88dc")
 
         // Act
         val result = repository.deleteById(id)
 
         // Assert
-        assert(result == null)
-    }
+        assert(result==null)
+        }
 
 }
