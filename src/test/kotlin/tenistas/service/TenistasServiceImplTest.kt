@@ -38,7 +38,7 @@ class TenistasServiceImplTest {
     lateinit var services: TenistasServiceImpl
 
     private val tenista= Tenista(
-        id = 9999L,
+        id = UUID.fromString("652923e4-c06c-4ca0-adb8-e6fbd141d32e"),
         nombre = "TestNombre",
         pais="TestPais",
         altura= 180,

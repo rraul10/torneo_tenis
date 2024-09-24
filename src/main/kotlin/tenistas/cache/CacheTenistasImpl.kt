@@ -12,8 +12,8 @@ import java.util.UUID
  */
 class CacheTenistasImpl(
     val size: Int
-): Cache<Long, Tenista> {
-    private val cache = mutableMapOf<Long, Tenista>()
+): Cache<UUID, Tenista> {
+    private val cache = mutableMapOf<UUID, Tenista>()
 
     /**
      * Obtiene un valor de la cache
@@ -22,7 +22,7 @@ class CacheTenistasImpl(
      * @author Javier Hernández
      * @since 1.0
      */
-    override fun get(key: Long): Tenista? = cache[key]
+    override fun get(key: UUID): Tenista? = cache[key]
 
     /**
      * Guarda un valor en la cache
@@ -31,7 +31,7 @@ class CacheTenistasImpl(
      * @author Javier Hernández
      * @since 1.0
      */
-    override fun put(key: Long, value: Tenista) {
+    override fun put(key: UUID, value: Tenista) {
         cache[key] = value
     }
 
@@ -43,7 +43,7 @@ class CacheTenistasImpl(
      * @since 1.0
      */
 
-    override fun remove(key: Long) {
+    override fun remove(key: UUID) {
         cache.remove(key)
     }
     /**
