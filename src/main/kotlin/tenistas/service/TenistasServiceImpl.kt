@@ -64,8 +64,6 @@ class TenistasServiceImpl(
     }
 
 
-
-
     /**
      * Obtiene un tenista por su nombre.
      * @param nombre Nombre del tenista.

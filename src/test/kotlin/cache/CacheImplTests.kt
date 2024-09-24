@@ -15,6 +15,7 @@ import java.util.*
 class CacheTenistasImplTest {
     private val cache = CacheTenistasImpl(Config.cacheSize)
     val nadal = Tenista(UUID.fromString("23d41191-8a78-4c02-9127-06e76b56af17") ,"Rafael nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
+
     @BeforeEach
     fun setUp() {
         cache.clear()
