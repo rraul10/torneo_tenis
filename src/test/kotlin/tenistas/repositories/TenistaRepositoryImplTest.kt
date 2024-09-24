@@ -16,8 +16,14 @@ class TenistaRepositoryImplTest {
     val Nadal = Tenista(1L,"Rafael Nadal", "Argentina", 185, 75, 2650, "Derecha", LocalDate.of(1985, 10, 25), LocalDateTime.now(), LocalDateTime.now())
     @BeforeEach
     fun setUp(){
+        repository = TenistasRepositoryImpl(connection)
         repository.createTable()
         repository.saveTenista(Nadal)
+    }
+
+    @AfterEach
+    fun tearDown(){
+        repository.deleteTable()
     }
 
     @Test
@@ -61,7 +67,6 @@ class TenistaRepositoryImplTest {
     fun getTenistaByName() {
         //arrange
         //act
-        repository.saveTenista(Nadal)
         val tenista = repository.getTenistaByName("Rafael Nadal")
         //assert
         assertNotNull(tenista)

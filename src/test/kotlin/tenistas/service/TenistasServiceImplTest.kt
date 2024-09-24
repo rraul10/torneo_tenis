@@ -154,30 +154,31 @@ class TenistasServiceImplTest {
     @Test
     fun updateTenistaOk() {
 
-        every { repository.updateTenista(tenista) } returns tenista
+        every { repository.updateTenista(tenista.id, tenista) } returns tenista
         every { cache.put(tenista.id,tenista) } just Runs
 
-        val result = services.updateTenista(tenista).value
+        val result = services.updateTenista(tenista.id, tenista).value
 
         assertAll(
             { assertEquals("TestNombre", result.nombre) },
         )
 
         verify(exactly = 1) { cache.put(tenista.id,tenista) }
-        verify(exactly = 1) { repository.updateTenista(tenista) }
+        verify(exactly = 1) { repository.updateTenista(tenista.id, tenista) }
     }
 
     @Test
     fun updateTenistaNotUpdated() {
+        val id = UUID.fromString("1b714822-d7f4-4a25-a472-549608f827a3")
 
-        every { repository.updateTenista(tenista) } returns null
+        every { repository.updateTenista(id ,tenista) } returns null
 
-        val result = services.updateTenista(tenista).error
+        val result = services.updateTenista(id, tenista).error
 
         assertTrue(result is TenistaError.TenistaNotUpdated)
 
-        verify(exactly = 0) { cache.put(tenista.id,tenista) }
-        verify(exactly = 1) { repository.updateTenista(tenista) }
+        verify(exactly = 0) { cache.put(id,tenista) }
+        verify(exactly = 1) { repository.updateTenista(id, tenista) }
     }
 
     @Test

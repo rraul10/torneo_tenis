@@ -4,6 +4,7 @@ import database.DatabaseConnection
 import org.lighthousegames.logging.logging
 import tenistas.mapper.logger
 import tenistas.models.Tenista
+import java.rmi.server.UID
 import java.sql.SQLException
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -21,6 +22,10 @@ class TenistasRepositoryImpl(
     private val dbConnection: DatabaseConnection
 ) : TenistasRepository {
     private val databaseConnection = dbConnection
+    init {
+        databaseConnection.initializeDatabase()
+    }
+
     fun createTable() {
         dbConnection.useConnection { connection ->
             val sql = """
@@ -36,6 +41,15 @@ class TenistasRepositoryImpl(
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL
                 );
+            """.trimIndent()
+            connection.createStatement().execute(sql)
+        }
+    }
+
+    fun deleteTable() {
+        dbConnection.useConnection { connection ->
+            val sql = """
+                DROP TABLE IF EXISTS tenistas;
             """.trimIndent()
             connection.createStatement().execute(sql)
         }
@@ -64,7 +78,7 @@ class TenistasRepositoryImpl(
                                 resultSet.getInt("altura"),
                                 resultSet.getInt("peso"),
                                 resultSet.getInt("puntos"),
-                                resultSet.getString("manos"),
+                                resultSet.getString("mano"),
                                 fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
                                 createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
                                 updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
@@ -107,7 +121,7 @@ class TenistasRepositoryImpl(
                             resultSet.getInt("altura"),
                             resultSet.getInt("peso"),
                             resultSet.getInt("puntos"),
-                            resultSet.getString("manos"),
+                            resultSet.getString("mano"),
                             fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
                             createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
                             updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
@@ -147,7 +161,7 @@ class TenistasRepositoryImpl(
                             resultSet.getInt("altura"),
                             resultSet.getInt("peso"),
                             resultSet.getInt("puntos"),
-                            resultSet.getString("manos"),
+                            resultSet.getString("mano"),
                             fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
                             createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
                             updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
@@ -202,8 +216,8 @@ class TenistasRepositoryImpl(
      * @since 1.0
      * @author Javier Ruiz
      */
-    override fun updateTenista(tenista: Tenista): Tenista? {
-        tenistas.repositories.logger.debug { "Actualizando el Tenista con id: ${tenista.id}" }
+    override fun updateTenista(id: UUID, tenista: Tenista): Tenista? {
+        logger.debug { "Actualizando el Tenista con id: ${tenista.id}" }
         val sql = """
         UPDATE tenistas 
         SET nombre=?, pais=?, altura=?, peso=?, puntos=?, mano=?, fecha_nacimiento=?, updated_at=? 
@@ -221,7 +235,7 @@ class TenistasRepositoryImpl(
                     statement.setString(6, tenista.mano)
                     statement.setString(7, tenista.fecha_nacimiento.toString())
                     statement.setString(8, tenista.updatedAt.toString())
-                    statement.setString(9, tenista.id.toString())
+                    statement.setString(9, id.toString())
 
                     val rowsAffected = statement.executeUpdate()
 
@@ -248,31 +262,50 @@ class TenistasRepositoryImpl(
      * @since 1.0
      * @author Raúl Fernández
      */
-    override fun deleteById(id: Long): Tenista? {
+    override fun deleteById(id: UUID): Tenista? {
         logger.debug { "Eliminando el Tenista con id: $id" }
-        val sql = "DELETE FROM tenistas WHERE id = ?"
-        val tenista = getTenistaById(id)
+        val sqlSelect = "SELECT * FROM tenistas WHERE id = ?"
+        val sqlDelete = "DELETE FROM tenistas WHERE id = ?"
+        var deletedTenista: Tenista? = null
 
-        return databaseConnection.useConnection { connection ->
+        databaseConnection.useConnection { connection ->
             try {
-                connection.prepareStatement(sql).use { statement ->
-                    statement.setString(1, id.toString())
+                connection.prepareStatement(sqlSelect).use { selectStatement ->
+                    selectStatement.setString(1, id.toString())
+                    val resultSet = selectStatement.executeQuery()
 
-                    val rowsAffected = statement.executeUpdate()
+                    if (resultSet.next()) {
+                        deletedTenista = Tenista(
+                            UUID.fromString(resultSet.getString("id")),
+                            resultSet.getString("nombre"),
+                            resultSet.getString("pais"),
+                            resultSet.getInt("altura"),
+                            resultSet.getInt("peso"),
+                            resultSet.getInt("puntos"),
+                            resultSet.getString("mano"),
+                            fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
+                            createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
+                            updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
+                        )
+                    }
+                }
+
+                connection.prepareStatement(sqlDelete).use { deleteStatement ->
+                    deleteStatement.setString(1, id.toString())
+                    val rowsAffected = deleteStatement.executeUpdate()
 
                     if (rowsAffected > 0) {
                         logger.debug { "Tenista con id: $id eliminado correctamente." }
-                        tenista
                     } else {
-                        logger.warn { "No se encontró el Tenista con id: $id para eliminar." }
-                        null
+                        logger.warn { "No se encuentra el Tenista con id: $id para eliminar." }
                     }
                 }
             } catch (e: SQLException) {
                 logger.error { "Error al eliminar el Tenista: ${e.message}" }
                 e.printStackTrace()
-                null
             }
         }
+
+        return deletedTenista
     }
 }

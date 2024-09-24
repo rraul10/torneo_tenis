@@ -12,8 +12,8 @@ interface TenistasService {
     fun getTenistaById(id: Long): Result<Tenista, TenistaError>
     fun getTenistaByNombre(nombre: String): Result<Tenista, TenistaError>
     fun createTenista(tenista: Tenista): Result<Tenista, TenistaError>
-    fun updateTenista(tenista: Tenista): Result<Tenista, TenistaError>
-    fun deleteTenistaById(id: Long): Result<Unit, TenistaError>
+    fun updateTenista(id: UUID,tenista: Tenista): Result<Tenista, TenistaError>
+    fun deleteTenistaById(id: UUID): Result<Unit, TenistaError>
     fun readCSV(file: File): Result<List<Tenista>, FileError>
     fun writeCSV(file: File, tenistas: List<Tenista>): Result<Unit, FileError>
     fun writeJson(file: File, tenistas: List<Tenista>): Result<Unit, FileError>
