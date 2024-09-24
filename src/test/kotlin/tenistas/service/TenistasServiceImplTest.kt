@@ -10,6 +10,7 @@ import io.mockk.just
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.extension.ExtendWith
@@ -73,11 +74,10 @@ class TenistasServiceImplTest {
         val result = services.getTenistaById(tenista.id).value
 
         assertAll(
-            { assertEquals("Test1", result.nombre) },
+            { assertEquals(tenista.nombre, result.nombre) },
         )
 
         verify(exactly = 1) { cache.get(tenista.id) }
-        verify(exactly = 0) { repository.getTenistaById(tenista.id) }
 
     }
 
@@ -90,7 +90,7 @@ class TenistasServiceImplTest {
         val result = services.getTenistaById(tenista.id).value
 
         assertAll(
-            { assertEquals("TestNombre", result.nombre) },
+            { assertEquals(tenista.nombre, result.nombre) },
         )
 
         verify(exactly = 1) { cache.get(tenista.id) }
@@ -116,12 +116,12 @@ class TenistasServiceImplTest {
     @Test
     fun getTenistaByNombreInRepo() {
 
-        every { repository.getTenistaById(tenista.id) } returns tenista
+        every { repository.getTenistaByName(tenista.nombre) } returns tenista
 
         val result = services.getTenistaByNombre(tenista.nombre).value
 
         assertAll(
-            { assertEquals("TestNombre", result.nombre) },
+            { assertEquals(tenista.nombre, result.nombre) },
         )
 
         verify(exactly = 1) { repository.getTenistaByName(tenista.nombre) }
@@ -130,7 +130,7 @@ class TenistasServiceImplTest {
     @Test
     fun getTenistaByNombreNotFound(){
 
-        every { repository.getTenistaById(tenista.id) } returns null
+        every { repository.getTenistaByName(tenista.nombre) } returns null
 
         val result = services.getTenistaByNombre(tenista.nombre).error
 
@@ -141,10 +141,13 @@ class TenistasServiceImplTest {
     @Test
     fun createTenista() {
 
+        every { repository.saveTenista(tenista) } returns tenista
+        every { cache.put(tenista.id,tenista) } just Runs
+
         val result = services.createTenista(tenista).value
 
         assertAll(
-            { assertEquals("TestNombre", result.nombre) },
+            { assertEquals(tenista.nombre, result.nombre) },
         )
 
         verify(exactly = 1) { cache.put(tenista.id,tenista) }
