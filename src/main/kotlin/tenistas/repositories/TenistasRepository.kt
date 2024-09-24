@@ -8,6 +8,6 @@ interface TenistasRepository {
     fun getTenistaById(id: UUID): Tenista?
     fun getTenistaByName(nombre: String): Tenista?
     fun saveTenista(tenista: Tenista): Tenista
-    fun updateTenista(tenista: Tenista): Tenista?
+    fun updateTenista(id: UUID, tenista: Tenista): Tenista?
     fun deleteById(id: UUID): Tenista?
 }
