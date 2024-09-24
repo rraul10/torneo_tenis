@@ -47,16 +47,21 @@ class TenistasServiceImpl(
 
     override fun getTenistaById(id: UUID): Result<Tenista, TenistaError> {
         logger.debug { "Getting tenista by id: $id" }
-        return cache.get(id)
-            ?.let {
-                logger.debug { "Estudiante no encontrado en la cache" }
-                tenistasRepository.getTenistaById(id)
+        val tenistaCache =  cache.get(id)
+        if(tenistaCache == null) {
+            val tenista = tenistasRepository.getTenistaById(id)
+            if(tenista == null) {
+                logger.error { "Persona no encontrada con ID: $id" }
+                return  Err(TenistaError.TenistaNotFound("Tenista no encontrado con id: $id"))
             }
-            ?.let { Ok(it) }
-            ?: Err(TenistaError.TenistaNotFound("Tenista no encontrado con id: $id"))
+            cache.put(id, tenista)
+            logger.info { "Persona encontrada en el repositorio: $tenista" }
+            return Ok(tenista)
+        } else {
+            logger.info { "tenista encontrado en la cache: $tenistaCache" }
+            return Ok(tenistaCache)
+        }
     }
-
-
 
 
     /**
