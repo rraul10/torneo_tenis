@@ -86,6 +86,7 @@ class TenistasServiceImplTest {
 
         every { cache.get(tenista.id) } returns null
         every { repository.getTenistaById(tenista.id) } returns tenista
+        every { cache.put(tenista.id, tenista) } just Runs
 
         val result = services.getTenistaById(tenista.id).value
 
@@ -95,8 +96,9 @@ class TenistasServiceImplTest {
 
         verify(exactly = 1) { cache.get(tenista.id) }
         verify(exactly = 1) { repository.getTenistaById(tenista.id) }
+        verify(exactly = 1) { cache.put(tenista.id, tenista)}
 
-    }
+        }
 
     @Test
     fun getTenistaByIdNotFound() {

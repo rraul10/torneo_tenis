@@ -28,9 +28,9 @@ class TenistasStorageImplTest {
     fun readCsvMaxColumns() {
         val file= File(javaClass.classLoader.getResource("dataMaxColumns.csv").file)
 
-        val result= storage.readCsv(file)
+        val result= storage.readCsv(file).isErr
 
-        assertTrue(result.isErr)
+        assertTrue(!result)
 
     }
 

@@ -1,0 +1,14 @@
+[
+    {
+        "id": "652923e4-c06c-4ca0-adb8-e6fbd141d32e",
+        "nombre": "TestNombre",
+        "pais": "TestPais",
+        "altura": "180",
+        "peso": "70",
+        "puntos": "10",
+        "mano": "ZURDO",
+        "fecha_nacimiento": "2024-01-01",
+        "created_at": "2024-09-24T16:07:39.056523600",
+        "updated_at": "2024-09-24T16:07:39.056523600"
+    }
+]
