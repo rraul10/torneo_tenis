@@ -58,7 +58,7 @@ class TenistasRepositoryImpl(
                     statement.executeQuery(sql).use { resultSet ->
                         while (resultSet.next()) {
                             val tenista = Tenista(
-                                UUID.fromString(resultSet.getString("id")),
+                                resultSet.getLong(resultSet.getString("id")),
                                 resultSet.getString("nombre"),
                                 resultSet.getString("pais"),
                                 resultSet.getInt("altura"),
@@ -89,7 +89,7 @@ class TenistasRepositoryImpl(
      * @since 1.0
      */
 
-    override fun getTenistaById(id: UUID): Tenista? {
+    override fun getTenistaById(id: Long): Tenista? {
         logger.debug { "Obteniendo el Tenista con id: $id" }
         val sql = "SELECT * FROM tenistas WHERE id = ?"
 
@@ -101,7 +101,7 @@ class TenistasRepositoryImpl(
                     val resultSet = statement.executeQuery()
                     if (resultSet.next()) {
                         tenista = Tenista(
-                            UUID.fromString(resultSet.getString("id")),
+                            resultSet.getLong("id"),
                             resultSet.getString("nombre"),
                             resultSet.getString("pais"),
                             resultSet.getInt("altura"),
@@ -141,7 +141,7 @@ class TenistasRepositoryImpl(
                     val resultSet = statement.executeQuery()
                     if (resultSet.next()) {
                         tenista = Tenista(
-                            UUID.fromString(resultSet.getString("id")),
+                            resultSet.getLong("id"),
                             resultSet.getString("nombre"),
                             resultSet.getString("pais"),
                             resultSet.getInt("altura"),
@@ -248,10 +248,31 @@ class TenistasRepositoryImpl(
      * @since 1.0
      * @author Raúl Fernández
      */
-    override fun deleteById(id: UUID): Tenista? {
+    override fun deleteById(id: Long): Tenista? {
         logger.debug { "Eliminando el Tenista con id: $id" }
-        val result = this.getTenistaById(id) ?: return null
-        db.deleteById(id)
-        return result
+        val sql = "DELETE FROM tenistas WHERE id = ?"
+        val tenista = getTenistaById(id)
+
+        return databaseConnection.useConnection { connection ->
+            try {
+                connection.prepareStatement(sql).use { statement ->
+                    statement.setString(1, id.toString())
+
+                    val rowsAffected = statement.executeUpdate()
+
+                    if (rowsAffected > 0) {
+                        logger.debug { "Tenista con id: $id eliminado correctamente." }
+                        tenista
+                    } else {
+                        logger.warn { "No se encontró el Tenista con id: $id para eliminar." }
+                        null
+                    }
+                }
+            } catch (e: SQLException) {
+                logger.error { "Error al eliminar el Tenista: ${e.message}" }
+                e.printStackTrace()
+                null
+            }
+        }
     }
 }

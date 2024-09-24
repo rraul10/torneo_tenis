@@ -19,7 +19,7 @@ private val logger = logging()
 fun validateArgsEntrada(path: String): Result<String, ArgsErrors> {
     logger.debug { "Validando argumentos de entrada" }
     logger.debug { "Comprobando si el archivo existe: $path" }
-     if (!File(path).exists() && !File(path).canRead() && !File(path).isFile) {
+     if (!File(path).exists() || !File(path).canRead() || !File(path).isFile) {
          logger.error {"Error al leer el archivo $path. No se puede encontrar o leer. Verifique que el archivo exista y que tenga permisos de lectura."}
         Err(ArgsErrors.FileDoesNotExistError("El archivo $path no existe o no se puede leer"))
     }

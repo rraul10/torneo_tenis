@@ -20,7 +20,7 @@ import java.util.UUID
  * @since 1.0
  */
 data class Tenista(
-    val id: UUID = UUID.randomUUID(),
+    val id: Long,
     val nombre: String,
     val pais: String,
     val altura: Int,
