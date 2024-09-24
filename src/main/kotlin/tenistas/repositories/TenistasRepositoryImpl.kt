@@ -41,6 +41,15 @@ class TenistasRepositoryImpl(
         }
     }
 
+    fun deleteTable() {
+        dbConnection.useConnection { connection ->
+            val sql = """
+                DROP TABLE IF EXISTS tenistas;
+            """.trimIndent()
+            connection.createStatement().execute(sql)
+        }
+    }
+
     /**
      * Obtiene a todos los tenistas de la base de datos
      * @return List<Tenista>
@@ -64,7 +73,7 @@ class TenistasRepositoryImpl(
                                 resultSet.getInt("altura"),
                                 resultSet.getInt("peso"),
                                 resultSet.getInt("puntos"),
-                                resultSet.getString("manos"),
+                                resultSet.getString("mano"),
                                 fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
                                 createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
                                 updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
@@ -107,7 +116,7 @@ class TenistasRepositoryImpl(
                             resultSet.getInt("altura"),
                             resultSet.getInt("peso"),
                             resultSet.getInt("puntos"),
-                            resultSet.getString("manos"),
+                            resultSet.getString("mano"),
                             fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
                             createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
                             updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
@@ -147,7 +156,7 @@ class TenistasRepositoryImpl(
                             resultSet.getInt("altura"),
                             resultSet.getInt("peso"),
                             resultSet.getInt("puntos"),
-                            resultSet.getString("manos"),
+                            resultSet.getString("mano"),
                             fecha_nacimiento = LocalDate.parse(resultSet.getString("fecha_nacimiento")),
                             createdAt = LocalDateTime.parse(resultSet.getString("created_at")),
                             updatedAt = LocalDateTime.parse(resultSet.getString("updated_at"))
@@ -251,7 +260,7 @@ class TenistasRepositoryImpl(
     override fun deleteById(id: UUID): Tenista? {
         logger.debug { "Eliminando el Tenista con id: $id" }
         val result = this.getTenistaById(id) ?: return null
-        db.deleteById(id)
+        //db.deleteById(id)
         return result
     }
 }
