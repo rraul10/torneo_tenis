@@ -53,7 +53,7 @@ class TenistasRepositoryImpl(
      * @since 1.0
      */
     override fun getAllTenistas(): List<Tenista> {
-        tenistas.repositories.logger.debug { "Obteniendo a todos los Tenistas" }
+        logger.debug { "Obteniendo a todos los Tenistas" }
         val sql = "SELECT * FROM tenistas"
 
         return databaseConnection.useConnection { connection ->

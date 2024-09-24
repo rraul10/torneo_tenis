@@ -17,7 +17,7 @@ val logger = logging()
 fun TenistaDto.toTenista(): Tenista {
     logger.debug { "Mapeando TenistaDto a Tenista" }
     return Tenista(
-        id = this.id.toLong(),
+        id = UUID.randomUUID(),
         nombre = this.nombre,
         pais = this.pais,
         altura = this.altura.toInt(),

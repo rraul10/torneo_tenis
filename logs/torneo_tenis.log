@@ -28,3 +28,4 @@
 2024-09-24 12:08:29 [Test worker] ERROR tenistas.validators.CsvValidatorKt - Numero de filas incorrecto
 2024-09-24 12:08:43 [Test worker] ERROR tenistas.validators.CsvValidatorKt - Numero de columnas incorrecto
 2024-09-24 12:08:43 [Test worker] ERROR tenistas.validators.CsvValidatorKt - Numero de filas incorrecto
+2024-09-24 12:58:02 [Test worker] ERROR t.r.TenistasRepositoryImplKt - Error al guardar el Tenista: [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: tenistas.id)
