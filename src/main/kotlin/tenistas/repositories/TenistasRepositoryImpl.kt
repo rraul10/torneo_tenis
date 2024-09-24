@@ -46,15 +46,6 @@ class TenistasRepositoryImpl(
         }
     }
 
-    fun deleteTable() {
-        dbConnection.useConnection { connection ->
-            val sql = """
-                DROP TABLE IF EXISTS tenistas;
-            """.trimIndent()
-            connection.createStatement().execute(sql)
-        }
-    }
-
     /**
      * Obtiene a todos los tenistas de la base de datos
      * @return List<Tenista>
@@ -72,7 +63,7 @@ class TenistasRepositoryImpl(
                     statement.executeQuery(sql).use { resultSet ->
                         while (resultSet.next()) {
                             val tenista = Tenista(
-                                resultSet.getLong(resultSet.getString("id")),
+                                UUID.fromString(resultSet.getString("id")),
                                 resultSet.getString("nombre"),
                                 resultSet.getString("pais"),
                                 resultSet.getInt("altura"),
@@ -95,6 +86,7 @@ class TenistasRepositoryImpl(
         } ?: emptyList()
     }
 
+
     /**
      * Obtiene a un tenista por su id
      * @param id: UUID
@@ -103,7 +95,7 @@ class TenistasRepositoryImpl(
      * @since 1.0
      */
 
-    override fun getTenistaById(id: Long): Tenista? {
+    override fun getTenistaById(id: UUID): Tenista? {
         logger.debug { "Obteniendo el Tenista con id: $id" }
         val sql = "SELECT * FROM tenistas WHERE id = ?"
 
@@ -115,7 +107,7 @@ class TenistasRepositoryImpl(
                     val resultSet = statement.executeQuery()
                     if (resultSet.next()) {
                         tenista = Tenista(
-                            resultSet.getLong("id"),
+                            UUID.fromString(resultSet.getString("id")),
                             resultSet.getString("nombre"),
                             resultSet.getString("pais"),
                             resultSet.getInt("altura"),
@@ -155,7 +147,7 @@ class TenistasRepositoryImpl(
                     val resultSet = statement.executeQuery()
                     if (resultSet.next()) {
                         tenista = Tenista(
-                            resultSet.getLong("id"),
+                            UUID.fromString(resultSet.getString("id")),
                             resultSet.getString("nombre"),
                             resultSet.getString("pais"),
                             resultSet.getInt("altura"),
